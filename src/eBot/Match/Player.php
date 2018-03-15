@@ -304,7 +304,4 @@ class Player
             Logger::log("Snapshot not found for ".$this->steamid." from match ".$this->match_id." for round ".$round);
         }
     }
-
 }
-
-?>

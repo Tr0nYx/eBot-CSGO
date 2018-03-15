@@ -21,4 +21,3 @@ class BombDefusing extends Event
     protected $user_steamid;
 
 }
-

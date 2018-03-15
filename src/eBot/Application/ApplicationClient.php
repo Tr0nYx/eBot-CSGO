@@ -60,28 +60,28 @@ class ApplicationClient extends AbstractApplication
 
         try {
             Application::getInstance()->websocket['match'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBot_ip().":".(\eBot\Config\Config::getInstance(
-                )->getBot_port())."/match"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance(
+                )->getBotPort())."/match"
             );
             Application::getInstance()->websocket['match']->open();
             Application::getInstance()->websocket['rcon'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBot_ip().":".(\eBot\Config\Config::getInstance(
-                )->getBot_port())."/rcon"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance(
+                )->getBotPort())."/rcon"
             );
             Application::getInstance()->websocket['rcon']->open();
             Application::getInstance()->websocket['logger'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBot_ip().":".(\eBot\Config\Config::getInstance(
-                )->getBot_port())."/logger"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance(
+                )->getBotPort())."/logger"
             );
             Application::getInstance()->websocket['logger']->open();
             Application::getInstance()->websocket['livemap'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBot_ip().":".(\eBot\Config\Config::getInstance(
-                )->getBot_port())."/livemap"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance(
+                )->getBotPort())."/livemap"
             );
             Application::getInstance()->websocket['livemap']->open();
             Application::getInstance()->websocket['aliveCheck'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBot_ip().":".(\eBot\Config\Config::getInstance(
-                )->getBot_port())."/alive"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance(
+                )->getBotPort())."/alive"
             );
             Application::getInstance()->websocket['aliveCheck']->open();
         } catch (\Exception $ex) {
@@ -91,13 +91,13 @@ class ApplicationClient extends AbstractApplication
 
         // Starting application
         Logger::log("Starting eBot Application");
-        $this->portMain = Config::getInstance()->getBot_port();
+        $this->portMain = Config::getInstance()->getBotPort();
 
-        Config::getInstance()->setBot_port(Config::getInstance()->getBot_port() + $argv[1]);
-        Logger::log("New port : ".Config::getInstance()->getBot_port());
+        Config::getInstance()->setBotPort(Config::getInstance()->getBotPort() + $argv[1]);
+        Logger::log("New port : ".Config::getInstance()->getBotPort());
 
         try {
-            $this->socket = new Socket(Config::getInstance()->getBot_ip(), Config::getInstance()->getBot_port());
+            $this->socket = new Socket(Config::getInstance()->getBotIp(), Config::getInstance()->getBotPort());
         } catch (\Exception $ex) {
             Logger::error("Unable to bind socket");
             die();
@@ -403,20 +403,20 @@ class ApplicationClient extends AbstractApplication
     private function initDatabase()
     {
         $conn = @\mysql_connect(
-            Config::getInstance()->getMysql_ip(),
-            Config::getInstance()->getMysql_user(),
-            Config::getInstance()->getMysql_pass()
+            Config::getInstance()->getMysqlIp(),
+            Config::getInstance()->getMysqlUser(),
+            Config::getInstance()->getMysqlPass()
         );
         if (!$conn) {
             Logger::error(
-                "Can't login into database ".Config::getInstance()->getMysql_user()."@".Config::getInstance(
-                )->getMysql_ip()
+                "Can't login into database ".Config::getInstance()->getMysqlUser()."@".Config::getInstance(
+                )->getMysqlIp()
             );
             exit(1);
         }
 
-        if (!\mysql_select_db(Config::getInstance()->getMysql_base(), $conn)) {
-            Logger::error("Can't select database ".Config::getInstance()->getMysql_base());
+        if (!\mysql_select_db(Config::getInstance()->getMysqlBase(), $conn)) {
+            Logger::error("Can't select database ".Config::getInstance()->getMysqlBase());
             exit(1);
         }
     }
@@ -440,5 +440,4 @@ class ApplicationClient extends AbstractApplication
     {
         return Application::getInstance()->websocket[$room];
     }
-
 }

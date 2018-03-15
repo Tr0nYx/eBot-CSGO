@@ -27,7 +27,4 @@ class RoundEnd extends Message
 
         return $o;
     }
-
 }
-
-?>

@@ -28,7 +28,7 @@ class ReportManager extends Singleton implements Taskable
     {
         $report = array(
             'hash' => $this->getHash(),
-            'ip' => Config::getInstance()->getBot_ip(),
+            'ip' => Config::getInstance()->getBotIp(),
             'matches' => MatchManager::getInstance()->getMatchesCount(),
         );
 
@@ -95,8 +95,8 @@ class ReportManager extends Singleton implements Taskable
     private function getHash()
     {
         $hash = md5(
-            Config::getInstance()->getBot_ip().':'.Config::getInstance()->getBot_port().':'.Config::getInstance(
-            )->getMysql_ip().':'.Config::getInstance()->getMysql_user().':'.Config::getInstance()->getMysql_pass()
+            Config::getInstance()->getBotIp().':'.Config::getInstance()->getBotPort().':'.Config::getInstance(
+            )->getMysqlIp().':'.Config::getInstance()->getMysqlUser().':'.Config::getInstance()->getMysqlPass()
         );
 
         return $hash;

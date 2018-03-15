@@ -26,7 +26,4 @@ class GotTheBomb extends Message
 
         return $o;
     }
-
 }
-
-?>

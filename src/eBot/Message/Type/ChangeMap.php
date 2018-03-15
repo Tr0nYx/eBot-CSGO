@@ -22,6 +22,19 @@ class ChangeMap extends Type
         $this->setName("ChangeMap");
     }
 
-}
+    /**
+     * @return mixed
+     */
+    public function getMaps()
+    {
+        return $this->maps;
+    }
 
-?>
+    /**
+     * @param mixed $maps
+     */
+    public function setMaps($maps)
+    {
+        $this->maps = $maps;
+    }
+}

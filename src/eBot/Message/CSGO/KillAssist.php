@@ -39,7 +39,4 @@ class KillAssist extends Message
 
         return $o;
     }
-
 }
-
-?>

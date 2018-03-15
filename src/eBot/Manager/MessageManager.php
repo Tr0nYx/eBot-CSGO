@@ -76,5 +76,4 @@ class MessageManager
     {
         return count($this->messages);
     }
-
 }

@@ -31,7 +31,4 @@ class EnteredTheGame extends Message
 
         return $o;
     }
-
 }
-
-?>

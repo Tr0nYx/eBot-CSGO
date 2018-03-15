@@ -35,7 +35,4 @@ class SayTeam extends Message
 
         return $o;
     }
-
 }
-
-?>

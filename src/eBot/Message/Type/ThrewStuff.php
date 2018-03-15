@@ -29,6 +29,131 @@ class ThrewStuff extends Type
         $this->setName("ThrewStuff");
     }
 
-}
+    /**
+     * @return string
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
 
-?>
+    /**
+     * @param string $userId
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->userName;
+    }
+
+    /**
+     * @param string $userName
+     */
+    public function setUserName($userName)
+    {
+        $this->userName = $userName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserTeam()
+    {
+        return $this->userTeam;
+    }
+
+    /**
+     * @param string $userTeam
+     */
+    public function setUserTeam($userTeam)
+    {
+        $this->userTeam = $userTeam;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserSteamid()
+    {
+        return $this->userSteamid;
+    }
+
+    /**
+     * @param string $userSteamid
+     */
+    public function setUserSteamid($userSteamid)
+    {
+        $this->userSteamid = $userSteamid;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosX()
+    {
+        return $this->posX;
+    }
+
+    /**
+     * @param int $posX
+     */
+    public function setPosX($posX)
+    {
+        $this->posX = $posX;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosY()
+    {
+        return $this->posY;
+    }
+
+    /**
+     * @param int $posY
+     */
+    public function setPosY($posY)
+    {
+        $this->posY = $posY;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosZ()
+    {
+        return $this->posZ;
+    }
+
+    /**
+     * @param int $posZ
+     */
+    public function setPosZ($posZ)
+    {
+        $this->posZ = $posZ;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStuff()
+    {
+        return $this->stuff;
+    }
+
+    /**
+     * @param int $stuff
+     */
+    public function setStuff($stuff)
+    {
+        $this->stuff = $stuff;
+    }
+}

@@ -21,5 +21,4 @@ class RoundScored extends Event
     protected $teamA;
     protected $teamB;
     protected $status;
-
 }

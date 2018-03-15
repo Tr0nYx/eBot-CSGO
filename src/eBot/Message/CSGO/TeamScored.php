@@ -36,7 +36,4 @@ class TeamScored extends Message
 
         return $o;
     }
-
 }
-
-?>

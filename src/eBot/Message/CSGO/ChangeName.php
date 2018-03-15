@@ -33,7 +33,4 @@ class ChangeName extends Message
 
         return $o;
     }
-
 }
-
-?>

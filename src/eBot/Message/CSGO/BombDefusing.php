@@ -32,7 +32,4 @@ class BombDefusing extends Message
 
         return $o;
     }
-
 }
-
-?>

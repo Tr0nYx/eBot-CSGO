@@ -356,5 +356,4 @@ class Map
     {
         $this->tvRecordFile = $tvRecordName;
     }
-
 }

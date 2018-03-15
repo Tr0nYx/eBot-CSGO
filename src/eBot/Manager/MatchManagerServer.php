@@ -81,9 +81,9 @@ class MatchManagerServer extends Singleton implements Taskable
 
     private function busyIp($ip)
     {
-        if (Config::getInstance()->getDelay_busy_server() > 0) {
-            $this->busyServers[$ip] = time() + Config::getInstance()->getDelay_busy_server();
-            Logger::log("Busying $ip for ".Config::getInstance()->getDelay_busy_server()." seconds");
+        if (Config::getInstance()->getDelayBusyServer() > 0) {
+            $this->busyServers[$ip] = time() + Config::getInstance()->getDelayBusyServer();
+            Logger::log("Busying $ip for ".Config::getInstance()->getDelayBusyServer()." seconds");
         }
     }
 
@@ -91,7 +91,7 @@ class MatchManagerServer extends Singleton implements Taskable
     {
         if (!@$this->busyServers[$ip]) {
             if ($delay == null) {
-                $delay = Config::getInstance()->getDelay_busy_server();
+                $delay = Config::getInstance()->getDelayBusyServer();
             }
             $this->busyServers[$ip] = time() + $delay;
             Logger::log("Delay $ip for $delay seconds");
@@ -113,8 +113,8 @@ class MatchManagerServer extends Singleton implements Taskable
                 $socket = ApplicationServer::getInstance()->getSocket();
                 $socket->sendTo(
                     "addMatch $match_id",
-                    Config::getInstance()->getBot_ip(),
-                    Config::getInstance()->getBot_port() + $this->matchs[$ip]['i']
+                    Config::getInstance()->getBotIp(),
+                    Config::getInstance()->getBotPort() + $this->matchs[$ip]['i']
                 );
                 Logger::log("Delegating match $match_id to instance #".$this->matchs[$ip]['i']);
             } else {
@@ -181,5 +181,4 @@ class MatchManagerServer extends Singleton implements Taskable
             }
         }
     }
-
 }

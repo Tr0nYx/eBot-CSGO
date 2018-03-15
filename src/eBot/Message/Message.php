@@ -11,7 +11,6 @@ namespace eBot\Message;
 
 abstract class Message
 {
-
     protected $regex;
     protected $datas;
 
@@ -33,5 +32,3 @@ abstract class Message
 
     abstract function process();
 }
-
-?>

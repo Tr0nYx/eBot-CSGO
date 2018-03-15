@@ -19,5 +19,4 @@ class BombPlanting extends Event
     protected $user_name;
     protected $user_team;
     protected $user_steamid;
-
 }

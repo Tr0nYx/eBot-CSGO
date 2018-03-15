@@ -60,7 +60,7 @@ class Application extends AbstractApplication
         Logger::log("Starting eBot Application");
 
         /* try {
-          $this->socket = new Socket(Config::getInstance()->getBot_ip(), Config::getInstance()->getBot_port());
+          $this->socket = new Socket(Config::getInstance()->getBotIp(), Config::getInstance()->getBotPort());
           } catch (Exception $ex) {
           Logger::error("Unable to bind socket");
           die();
@@ -68,28 +68,23 @@ class Application extends AbstractApplication
 
         try {
             $this->websocket['match'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBot_ip().":".(\eBot\Config\Config::getInstance(
-                )->getBot_port())."/match"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance()->getBotPort())."/match"
             );
             $this->websocket['match']->open();
             $this->websocket['rcon'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBot_ip().":".(\eBot\Config\Config::getInstance(
-                )->getBot_port())."/rcon"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance()->getBotPort())."/rcon"
             );
             $this->websocket['rcon']->open();
             $this->websocket['logger'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBot_ip().":".(\eBot\Config\Config::getInstance(
-                )->getBot_port())."/logger"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance()->getBotPort())."/logger"
             );
             $this->websocket['logger']->open();
             $this->websocket['livemap'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBot_ip().":".(\eBot\Config\Config::getInstance(
-                )->getBot_port())."/livemap"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance()->getBotPort())."/livemap"
             );
             $this->websocket['livemap']->open();
             $this->websocket['aliveCheck'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBot_ip().":".(\eBot\Config\Config::getInstance(
-                )->getBot_port())."/alive"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance()->getBotPort())."/alive"
             );
             $this->websocket['aliveCheck']->open();
         } catch (\Exception $ex) {
@@ -367,10 +362,14 @@ class Application extends AbstractApplication
                                 $match = MatchManager::getInstance()->getMatch($preg["ip"]);
                                 if ($match) {
                                     $reply = $match->adminSkipMap();
-                                    /* if ($reply) {
-                                      $send = json_encode(array('message' => 'button', 'content' => 'stop', 'id' => $preg["id"]));
-                                      $this->websocket['match']->sendData($send);
-                                      } */
+                                    /*if ($reply) {
+                                        $send = json_encode(array(
+                                            'message' => 'button',
+                                            'content' => 'stop',
+                                            'id' => $preg["id"],
+                                        ));
+                                        $this->websocket['match']->sendData($send);
+                                    }*/
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
                                 }
@@ -425,20 +424,19 @@ class Application extends AbstractApplication
     private function initDatabase()
     {
         $conn = mysqli_connect(
-            Config::getInstance()->getMysql_ip().':'.Config::getInstance()->getMysql_port(),
-            Config::getInstance()->getMysql_user(),
-            Config::getInstance()->getMysql_pass()
+            Config::getInstance()->getMysqlIp().':'.Config::getInstance()->getMysqlPort(),
+            Config::getInstance()->getMysqlUser(),
+            Config::getInstance()->getMysqlPass()
         );
         if (!$conn) {
             Logger::error(
-                "Can't login into database ".Config::getInstance()->getMysql_user()."@".Config::getInstance(
-                )->getMysql_ip()
+                "Can't login into database ".Config::getInstance()->getMysqlUser()."@".Config::getInstance()->getMysqlIp()
             );
             die(1);
         }
 
-        if (mysqli_select_db(Config::getInstance()->getMysql_base(), $conn)) {
-            Logger::error("Can't select database ".Config::getInstance()->getMysql_base());
+        if (mysqli_select_db(Config::getInstance()->getMysqlBase(), $conn)) {
+            Logger::error("Can't select database ".Config::getInstance()->getMysqlBase());
             die(1);
         }
     }
@@ -462,5 +460,4 @@ class Application extends AbstractApplication
     {
         return $this->websocket[$room];
     }
-
 }

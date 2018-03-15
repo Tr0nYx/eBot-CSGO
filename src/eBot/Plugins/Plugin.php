@@ -11,7 +11,6 @@ namespace eBot\Plugins;
 
 interface Plugin
 {
-
     public function init($config);
 
     public function getEventList();
@@ -27,7 +26,4 @@ interface Plugin
     public function onEventRemoved($name);
 
     public function onEvent($event);
-
 }
-
-?>

@@ -14,11 +14,29 @@ use eBot\Message\Type;
 
 class JoinTeam extends Type
 {
-
+    /**
+     * @var string
+     */
     public $userId = "";
+
+    /**
+     * @var string
+     */
     public $userName = "";
+
+    /**
+     * @var string
+     */
     public $userTeam = "";
+
+    /**
+     * @var string
+     */
     public $userSteamid = "";
+
+    /**
+     * @var string
+     */
     public $joinTeam = "";
 
     public function __construct()
@@ -26,6 +44,83 @@ class JoinTeam extends Type
         $this->setName("JoinTeam");
     }
 
-}
+    /**
+     * @return string
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
 
-?>
+    /**
+     * @param string $userId
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->userName;
+    }
+
+    /**
+     * @param string $userName
+     */
+    public function setUserName($userName)
+    {
+        $this->userName = $userName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserTeam()
+    {
+        return $this->userTeam;
+    }
+
+    /**
+     * @param string $userTeam
+     */
+    public function setUserTeam($userTeam)
+    {
+        $this->userTeam = $userTeam;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserSteamid()
+    {
+        return $this->userSteamid;
+    }
+
+    /**
+     * @param string $userSteamid
+     */
+    public function setUserSteamid($userSteamid)
+    {
+        $this->userSteamid = $userSteamid;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJoinTeam()
+    {
+        return $this->joinTeam;
+    }
+
+    /**
+     * @param string $joinTeam
+     */
+    public function setJoinTeam($joinTeam)
+    {
+        $this->joinTeam = $joinTeam;
+    }
+}

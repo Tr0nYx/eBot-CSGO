@@ -34,7 +34,4 @@ class Purchased extends Message
 
         return $o;
     }
-
 }
-
-?>

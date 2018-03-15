@@ -62,7 +62,4 @@ abstract class Type
             return strtolower(substr($aText, 0, 1)).substr($aText, 1);
         }
     }
-
 }
-
-?>

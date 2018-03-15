@@ -32,7 +32,4 @@ class BombPlanting extends Message
 
         return $o;
     }
-
 }
-
-?>

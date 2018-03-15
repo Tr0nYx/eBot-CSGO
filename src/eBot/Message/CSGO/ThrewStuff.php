@@ -37,7 +37,4 @@ class ThrewStuff extends Message
 
         return $o;
     }
-
 }
-
-?>

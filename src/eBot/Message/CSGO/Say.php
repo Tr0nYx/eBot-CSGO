@@ -35,7 +35,4 @@ class Say extends Message
 
         return $o;
     }
-
 }
-
-?>

@@ -32,7 +32,4 @@ class Connected extends Message
 
         return $o;
     }
-
 }
-
-?>

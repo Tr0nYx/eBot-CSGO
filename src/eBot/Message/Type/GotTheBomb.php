@@ -19,7 +19,4 @@ class GotTheBomb extends Type
     {
         $this->setName("GotTheBomb");
     }
-
 }
-
-?>

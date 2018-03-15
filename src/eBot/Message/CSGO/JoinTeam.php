@@ -33,7 +33,4 @@ class JoinTeam extends Message
 
         return $o;
     }
-
 }
-
-?>

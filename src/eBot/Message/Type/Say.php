@@ -30,6 +30,99 @@ class Say extends Type
         $this->setName("Say");
     }
 
-}
+    /**
+     * @return string
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
 
-?>
+    /**
+     * @param string $userId
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->userName;
+    }
+
+    /**
+     * @param string $userName
+     */
+    public function setUserName($userName)
+    {
+        $this->userName = $userName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserTeam()
+    {
+        return $this->userTeam;
+    }
+
+    /**
+     * @param string $userTeam
+     */
+    public function setUserTeam($userTeam)
+    {
+        $this->userTeam = $userTeam;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserSteamid()
+    {
+        return $this->userSteamid;
+    }
+
+    /**
+     * @param string $userSteamid
+     */
+    public function setUserSteamid($userSteamid)
+    {
+        $this->userSteamid = $userSteamid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param mixed $text
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+}

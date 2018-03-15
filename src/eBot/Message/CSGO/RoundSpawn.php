@@ -28,7 +28,4 @@ class RoundSpawn extends Message
 
         return $o;
     }
-
 }
-
-?>

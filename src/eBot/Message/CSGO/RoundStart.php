@@ -28,7 +28,4 @@ class RoundStart extends Message
 
         return $o;
     }
-
 }
-
-?>

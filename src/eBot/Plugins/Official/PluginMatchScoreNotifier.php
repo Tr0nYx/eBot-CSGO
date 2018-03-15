@@ -85,7 +85,4 @@ class PluginMatchScoreNotifier implements Plugin
     {
         return array(\eBot\Events\EventDispatcher::EVENT_ROUNDSCORED);
     }
-
 }
-
-?>

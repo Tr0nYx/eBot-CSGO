@@ -188,7 +188,7 @@ class Match implements Taskable
             $this->rconPassword = $rcon;
             Logger::log("RCON init ok");
             $this->rcon->send(
-                "log on; mp_logdetail 3; logaddress_del ".Config::getInstance()->getLogAddressIp().":".Config::getInstance()->getBot_port().";logaddress_add ".Config::getInstance()->getLogAddressIp().":".Config::getInstance()->getBot_port()
+                "log on; mp_logdetail 3; logaddress_del ".Config::getInstance()->getLogAddressIp().":".Config::getInstance()->getBotPort().";logaddress_add ".Config::getInstance()->getLogAddressIp().":".Config::getInstance()->getBotPort()
             );
             $this->rcon->send(
                 "sv_rcon_whitelist_address \"".Config::getInstance()->getLogAddressIp()."\""
@@ -688,7 +688,7 @@ class Match implements Taskable
             $this->addLog("Stopping record and pushing demo...");
             if (Config::getInstance()->getDemoDownload()) {
                 $this->rcon->send(
-                    'tv_stoprecord; '.'csay_tv_demo_push "'.$this->currentRecordName.'.dem" "'.(Config::getInstance()->isSSLEnabled() ? 'https' : 'http').'://'.Config::getInstance()->getLogAddressIp().':'.Config::getInstance()->getBot_port().'/upload"'
+                    'tv_stoprecord; '.'csay_tv_demo_push "'.$this->currentRecordName.'.dem" "'.(Config::getInstance()->isSSLEnabled() ? 'https' : 'http').'://'.Config::getInstance()->getLogAddressIp().':'.Config::getInstance()->getBotPort().'/upload"'
                 );
             } else {
                 $this->rcon->send("tv_stoprecord");
@@ -2447,10 +2447,10 @@ class Match implements Taskable
 
                 $this->addLog("Engaging next map: '".$this->currentMap->getMapName()."'.");
                 $this->addMatchLog("Engaging next map: '".$this->currentMap->getMapName()."'.");
-                $time = microtime(true) + Config::getInstance()->getDelay_busy_server();
+                $time = microtime(true) + Config::getInstance()->getDelayBusyServer();
                 $this->timeEngageMap = $time;
                 $this->addLog(
-                    "Launching map in ".Config::getInstance()->getDelay_busy_server()." seconds."
+                    "Launching map in ".Config::getInstance()->getDelayBusyServer()." seconds."
                 );
                 TaskManager::getInstance()->addTask(new Task($this, self::TASK_ENGAGE_MAP, $time));
             } else {
@@ -4175,5 +4175,4 @@ class Match implements Taskable
     {
         return $this->currentMap->getMapId();
     }
-
 }

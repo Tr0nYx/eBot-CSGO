@@ -27,7 +27,4 @@ class ChangeMap extends Message
 
         return $o;
     }
-
 }
-
-?>

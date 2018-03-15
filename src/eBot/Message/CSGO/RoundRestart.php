@@ -26,7 +26,4 @@ class RoundRestart extends Message
 
         return $o;
     }
-
 }
-
-?>

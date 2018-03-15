@@ -26,5 +26,4 @@ class Kill extends Event
     protected $killedUserSteamid = "";
     protected $weapon;
     protected $headshot;
-
 }

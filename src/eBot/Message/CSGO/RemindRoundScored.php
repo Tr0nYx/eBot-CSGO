@@ -52,7 +52,4 @@ class RemindRoundScored extends Message
 
         return $o;
     }
-
 }
-
-?>

@@ -35,7 +35,4 @@ class SwitchTeam extends Message
 
         return $o;
     }
-
 }
-
-?>

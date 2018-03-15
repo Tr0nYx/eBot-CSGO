@@ -53,7 +53,4 @@ class RoundScored extends Message
 
         return $o;
     }
-
 }
-
-?>

@@ -81,7 +81,7 @@ class ApplicationServer extends AbstractApplication
         Logger::log("Starting eBot Application");
 
         try {
-            $this->socket = new Socket(Config::getInstance()->getBot_ip(), Config::getInstance()->getBot_port());
+            $this->socket = new Socket(Config::getInstance()->getBotIp(), Config::getInstance()->getBotPort());
         } catch (\Exception $ex) {
             Logger::error("Unable to bind socket");
             die();
@@ -89,23 +89,23 @@ class ApplicationServer extends AbstractApplication
 
         try {
             $this->websocket['match'] = new \WebSocket(
-                "ws://".Config::getInstance()->getBot_ip().":".(Config::getInstance()->getBot_port())."/match"
+                "ws://".Config::getInstance()->getBotIp().":".(Config::getInstance()->getBotPort())."/match"
             );
             $this->websocket['match']->open();
             $this->websocket['rcon'] = new \WebSocket(
-                "ws://".Config::getInstance()->getBot_ip().":".(Config::getInstance()->getBot_port())."/rcon"
+                "ws://".Config::getInstance()->getBotIp().":".(Config::getInstance()->getBotPort())."/rcon"
             );
             $this->websocket['rcon']->open();
             $this->websocket['logger'] = new \WebSocket(
-                "ws://".Config::getInstance()->getBot_ip().":".(Config::getInstance()->getBot_port())."/logger"
+                "ws://".Config::getInstance()->getBotIp().":".(Config::getInstance()->getBotPort())."/logger"
             );
             $this->websocket['logger']->open();
             $this->websocket['livemap'] = new \WebSocket(
-                "ws://".Config::getInstance()->getBot_ip().":".(Config::getInstance()->getBot_port())."/livemap"
+                "ws://".Config::getInstance()->getBotIp().":".(Config::getInstance()->getBotPort())."/livemap"
             );
             $this->websocket['livemap']->open();
             $this->websocket['aliveCheck'] = new \WebSocket(
-                "ws://".Config::getInstance()->getBot_ip().":".(Config::getInstance()->getBot_port())."/alive"
+                "ws://".Config::getInstance()->getBotIp().":".(Config::getInstance()->getBotPort())."/alive"
             );
             $this->websocket['aliveCheck']->open();
         } catch (\Exception $ex) {
@@ -125,8 +125,8 @@ class ApplicationServer extends AbstractApplication
                         for ($i = 1; $i <= count($this->instance); $i++) {
                             $this->socket->sendto(
                                 $data,
-                                Config::getInstance()->getBot_ip(),
-                                Config::getInstance()->getBot_port() + $i
+                                Config::getInstance()->getBotIp(),
+                                Config::getInstance()->getBotPort() + $i
                             );
                         }
                     } elseif ($data == '__false__') {
@@ -134,8 +134,8 @@ class ApplicationServer extends AbstractApplication
                         for ($i = 1; $i <= count($this->instance); $i++) {
                             $this->socket->sendto(
                                 $data,
-                                Config::getInstance()->getBot_ip(),
-                                Config::getInstance()->getBot_port() + $i
+                                Config::getInstance()->getBotIp(),
+                                Config::getInstance()->getBotPort() + $i
                             );
                         }
                     } elseif ($data == '__aliveCheck__') {
@@ -143,8 +143,8 @@ class ApplicationServer extends AbstractApplication
                         for ($i = 1; $i <= count($this->instance); $i++) {
                             $this->socket->sendto(
                                 $data,
-                                Config::getInstance()->getBot_ip(),
-                                Config::getInstance()->getBot_port() + $i
+                                Config::getInstance()->getBotIp(),
+                                Config::getInstance()->getBotPort() + $i
                             );
                         }
                     } elseif (preg_match("!^removeMatch (?<id>\d+)$!", $data, $preg)) {
@@ -161,8 +161,8 @@ class ApplicationServer extends AbstractApplication
                                 if ($match) {
                                     $this->socket->sendto(
                                         $origData,
-                                        Config::getInstance()->getBot_ip(),
-                                        Config::getInstance()->getBot_port() + $match['i']
+                                        Config::getInstance()->getBotIp(),
+                                        Config::getInstance()->getBotPort() + $match['i']
                                     );
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
@@ -172,8 +172,8 @@ class ApplicationServer extends AbstractApplication
                                 if ($match) {
                                     $this->socket->sendto(
                                         $origData,
-                                        Config::getInstance()->getBot_ip(),
-                                        Config::getInstance()->getBot_port() + $match['i']
+                                        Config::getInstance()->getBotIp(),
+                                        Config::getInstance()->getBotPort() + $match['i']
                                     );
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
@@ -187,8 +187,8 @@ class ApplicationServer extends AbstractApplication
                                 if ($match) {
                                     $this->socket->sendto(
                                         $origData,
-                                        Config::getInstance()->getBot_ip(),
-                                        Config::getInstance()->getBot_port() + $match['i']
+                                        Config::getInstance()->getBotIp(),
+                                        Config::getInstance()->getBotPort() + $match['i']
                                     );
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
@@ -202,8 +202,8 @@ class ApplicationServer extends AbstractApplication
                                 if ($match) {
                                     $this->socket->sendto(
                                         $origData,
-                                        Config::getInstance()->getBot_ip(),
-                                        Config::getInstance()->getBot_port() + $match['i']
+                                        Config::getInstance()->getBotIp(),
+                                        Config::getInstance()->getBotPort() + $match['i']
                                     );
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
@@ -217,8 +217,8 @@ class ApplicationServer extends AbstractApplication
                                 if ($match) {
                                     $this->socket->sendto(
                                         $origData,
-                                        Config::getInstance()->getBot_ip(),
-                                        Config::getInstance()->getBot_port() + $match['i']
+                                        Config::getInstance()->getBotIp(),
+                                        Config::getInstance()->getBotPort() + $match['i']
                                     );
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
@@ -232,8 +232,8 @@ class ApplicationServer extends AbstractApplication
                                 if ($match) {
                                     $this->socket->sendto(
                                         $origData,
-                                        Config::getInstance()->getBot_ip(),
-                                        Config::getInstance()->getBot_port() + $match['i']
+                                        Config::getInstance()->getBotIp(),
+                                        Config::getInstance()->getBotPort() + $match['i']
                                     );
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
@@ -247,8 +247,8 @@ class ApplicationServer extends AbstractApplication
                                 if ($match) {
                                     $this->socket->sendto(
                                         $origData,
-                                        Config::getInstance()->getBot_ip(),
-                                        Config::getInstance()->getBot_port() + $match['i']
+                                        Config::getInstance()->getBotIp(),
+                                        Config::getInstance()->getBotPort() + $match['i']
                                     );
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
@@ -262,8 +262,8 @@ class ApplicationServer extends AbstractApplication
                                 if ($match) {
                                     $this->socket->sendto(
                                         $origData,
-                                        Config::getInstance()->getBot_ip(),
-                                        Config::getInstance()->getBot_port() + $match['i']
+                                        Config::getInstance()->getBotIp(),
+                                        Config::getInstance()->getBotPort() + $match['i']
                                     );
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
@@ -277,8 +277,8 @@ class ApplicationServer extends AbstractApplication
                                 if ($match) {
                                     $this->socket->sendto(
                                         $origData,
-                                        Config::getInstance()->getBot_ip(),
-                                        Config::getInstance()->getBot_port() + $match['i']
+                                        Config::getInstance()->getBotIp(),
+                                        Config::getInstance()->getBotPort() + $match['i']
                                     );
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
@@ -292,8 +292,8 @@ class ApplicationServer extends AbstractApplication
                                 if ($match) {
                                     $this->socket->sendto(
                                         $origData,
-                                        Config::getInstance()->getBot_ip(),
-                                        Config::getInstance()->getBot_port() + $match['i']
+                                        Config::getInstance()->getBotIp(),
+                                        Config::getInstance()->getBotPort() + $match['i']
                                     );
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
@@ -307,8 +307,8 @@ class ApplicationServer extends AbstractApplication
                                 if ($match) {
                                     $this->socket->sendto(
                                         $origData,
-                                        Config::getInstance()->getBot_ip(),
-                                        Config::getInstance()->getBot_port() + $match['i']
+                                        Config::getInstance()->getBotIp(),
+                                        Config::getInstance()->getBotPort() + $match['i']
                                     );
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
@@ -322,8 +322,8 @@ class ApplicationServer extends AbstractApplication
                                 if ($match) {
                                     $this->socket->sendto(
                                         $origData,
-                                        Config::getInstance()->getBot_ip(),
-                                        Config::getInstance()->getBot_port() + $match['i']
+                                        Config::getInstance()->getBotIp(),
+                                        Config::getInstance()->getBotPort() + $match['i']
                                     );
                                 } else {
                                     Logger::error($preg["ip"]." is not managed !");
@@ -351,20 +351,20 @@ class ApplicationServer extends AbstractApplication
     private function initDatabase()
     {
         $conn = mysqli_connect(
-            Config::getInstance()->getMysql_ip(),
-            Config::getInstance()->getMysql_user(),
-            Config::getInstance()->getMysql_pass()
+            Config::getInstance()->getMysqlIp(),
+            Config::getInstance()->getMysqlUser(),
+            Config::getInstance()->getMysqlPass()
         );
         if (!$conn) {
             Logger::error(
-                "Can't login into database ".Config::getInstance()->getMysql_user()."@".Config::getInstance(
-                )->getMysql_ip()
+                "Can't login into database ".Config::getInstance()->getMysqlUser()."@".Config::getInstance(
+                )->getMysqlIp()
             );
             exit(1);
         }
 
-        if (mysqli_select_db(Config::getInstance()->getMysql_base(), $conn)) {
-            Logger::error("Can't select database ".Config::getInstance()->getMysql_base());
+        if (mysqli_select_db(Config::getInstance()->getMysqlBase(), $conn)) {
+            Logger::error("Can't select database ".Config::getInstance()->getMysqlBase());
             exit(1);
         }
     }
@@ -388,5 +388,4 @@ class ApplicationServer extends AbstractApplication
     {
         return $this->websocket[$room];
     }
-
 }

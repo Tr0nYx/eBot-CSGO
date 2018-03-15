@@ -47,7 +47,5 @@ class Kill extends Message
 
         return $o;
     }
-
 }
 
-?>

@@ -129,8 +129,9 @@ class Config extends Singleton
     public function scanAdvertising()
     {
         unset($this->advertising);
-        $q = mysqli_query(
-            "SELECT a.`season_id`, a.`message`, s.`name` FROM `advertising` a LEFT JOIN `seasons` s ON a.`season_id` = s.`id` WHERE a.`active` = 1"
+        $q = mysqli_query(null,
+            "SELECT a.`season_id`, a.`message`, s.`name` ".
+             "FROM `advertising` a LEFT JOIN `seasons` s ON a.`season_id` = s.`id` WHERE a.`active` = 1"
         );
         while ($row = mysqli_fetch_assoc($q)) {
             $this->advertising['message'][] = $row['message'];
@@ -188,72 +189,72 @@ class Config extends Singleton
         $this->damage_report = $damage_report;
     }
 
-    public function getMysql_ip()
+    public function getMysqlIp()
     {
         return $this->mysql_ip;
     }
 
-    public function setMysql_ip($mysql_ip)
+    public function setMysqlIp($mysql_ip)
     {
         $this->mysql_ip = $mysql_ip;
     }
 
-    public function getMysql_port()
+    public function getMysqlPort()
     {
         return $this->mysql_port;
     }
 
-    public function setMysql_port($mysql_port)
+    public function setMysqlPort($mysql_port)
     {
         $this->mysql_port = $mysql_port;
     }
 
-    public function getMysql_user()
+    public function getMysqlUser()
     {
         return $this->mysql_user;
     }
 
-    public function setMysql_user($mysql_user)
+    public function setMysqlUser($mysql_user)
     {
         $this->mysql_user = $mysql_user;
     }
 
-    public function getMysql_pass()
+    public function getMysqlPass()
     {
         return $this->mysql_pass;
     }
 
-    public function setMysql_pass($mysql_pass)
+    public function setMysqlPass($mysql_pass)
     {
         $this->mysql_pass = $mysql_pass;
     }
 
-    public function getMysql_base()
+    public function getMysqlBase()
     {
         return $this->mysql_base;
     }
 
-    public function setMysql_base($mysql_base)
+    public function setMysqlBase($mysql_base)
     {
         $this->mysql_base = $mysql_base;
     }
 
-    public function getBot_ip()
+    public function getBotIp()
     {
         return $this->bot_ip;
     }
 
-    public function setBot_ip($bot_ip)
+    public function setBotIp($bot_ip)
     {
         $this->bot_ip = $bot_ip;
     }
 
-    public function getBot_port()
+    public function getBotPort()
     {
         return $this->bot_port;
     }
 
-    public function setBot_port($bot_port)
+    public function setBotPort($bot_port)
     {
         $this->bot_port = $bot_port;
     }
@@ -304,22 +305,22 @@ class Config extends Singleton
         $this->messages = $messages;
     }
 
-    public function getRecord_name()
+    public function getRecordName()
     {
         return $this->record_name;
     }
 
-    public function setRecord_name($record_name)
+    public function setRecordName($record_name)
     {
         $this->record_name = $record_name;
     }
 
-    public function getDelay_busy_server()
+    public function getDelayBusyServer()
     {
         return $this->delay_busy_server;
     }
 
-    public function setDelay_busy_server($delay_busy_server)
+    public function setDelayBusyServer($delay_busy_server)
     {
         $this->delay_busy_server = $delay_busy_server;
     }
@@ -344,22 +345,22 @@ class Config extends Singleton
         $this->ot_rounds = $ot_rounds;
     }
 
-    public function getPerf_link()
+    public function getPerfLink()
     {
         return $this->perf_link;
     }
 
-    public function setPerf_link($perf_link)
+    public function setPerfLink($perf_link)
     {
         $this->perf_link = $perf_link;
     }
 
-    public function getPerf_link_on_update()
+    public function getPerfLinkOnUpdate()
     {
         return $this->perf_link_on_update;
     }
 
-    public function setPerf_link_on_update($perf_link_on_update)
+    public function setPerfLinkOnUpdate($perf_link_on_update)
     {
         $this->perf_link_on_update = $perf_link_on_update;
     }
@@ -528,5 +529,4 @@ class Config extends Singleton
     {
         $this->node_startup_method = $node_startup_method;
     }
-
 }
