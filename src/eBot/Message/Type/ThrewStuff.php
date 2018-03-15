@@ -12,7 +12,8 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class ThrewStuff extends Type {
+class ThrewStuff extends Type
+{
 
     public $userId = "";
     public $userName = "";
@@ -22,8 +23,9 @@ class ThrewStuff extends Type {
     public $posY = 0;
     public $posZ = 0;
     public $stuff = 0;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->setName("ThrewStuff");
     }
 

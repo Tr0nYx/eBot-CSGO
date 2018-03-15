@@ -6,3 +6,4 @@ demos/*.dem*
 logs/*
 .idea/
 node_modules
+*.iml

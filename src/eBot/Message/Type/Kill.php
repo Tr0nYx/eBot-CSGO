@@ -12,7 +12,8 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class Kill extends Type {
+class Kill extends Type
+{
 
     public $userId = "";
     public $userName = "";
@@ -31,7 +32,8 @@ class Kill extends Type {
     public $weapon;
     public $headshot;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("Kill");
     }
 

@@ -12,11 +12,13 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class ChangeMap extends Type {
+class ChangeMap extends Type
+{
 
     public $maps;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("ChangeMap");
     }
 

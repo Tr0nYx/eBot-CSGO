@@ -1,0 +1,30 @@
+language: php
+
+matrix:
+  include:
+    - php: 5.5
+    - php: 5.6
+  fast_finish: true
+before-script:
+    - mkdir build
+    - mkdir build/logs
+
+install:
+  - composer self-update
+  - composer --prefer-stable --no-interaction update
+
+env:
+  global:
+    - SYMFONY_DEPRECATIONS_HELPER=strict
+    - deps=no
+
+script:
+  - ./vendor/bin/phpcs --standard=PSR2 src/
+  - ./vendor/bin/phpcpd src/
+  - ./vendor/bin/phpmd src text ruleset.xml
+
+cache:
+  directories:
+    - vendor
+
+sudo: false

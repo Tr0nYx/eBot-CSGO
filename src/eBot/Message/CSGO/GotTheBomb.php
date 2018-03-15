@@ -12,14 +12,18 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\GotTheBomb as Object;
 
-class GotTheBomb extends Message {
+class GotTheBomb extends Message
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('/triggered \"Got\_The\_Bomb\"/');
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
+
         return $o;
     }
 

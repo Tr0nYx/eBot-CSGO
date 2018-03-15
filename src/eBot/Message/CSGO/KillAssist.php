@@ -13,14 +13,19 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\KillAssist as Object;
 
-class KillAssist extends Message {
+class KillAssist extends Message
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         //"Clarence<4><BOT><CT>" assisted killing "Clarence<3><BOT><TERRORIST>"
-        parent::__construct('/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" assisted killing "(?P<killed_user_name>.+)[<](?P<killed_user_id>\d+)[>][<](?P<killed_steam_id>.*)[>][<](?P<killed_user_team>CT|TERRORIST|Unassigned|Spectator)[>]"/');
+        parent::__construct(
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" assisted killing "(?P<killed_user_name>.+)[<](?P<killed_user_id>\d+)[>][<](?P<killed_steam_id>.*)[>][<](?P<killed_user_team>CT|TERRORIST|Unassigned|Spectator)[>]"/'
+        );
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
         $o->setUserId($this->datas['user_id']);
         $o->setUserName($this->datas['user_name']);
@@ -31,7 +36,7 @@ class KillAssist extends Message {
         $o->setKilledUserName($this->datas['killed_user_name']);
         $o->setKilledUserTeam($this->datas['killed_user_team']);
         $o->setKilledUserSteamid($this->datas['killed_steam_id']);
-        
+
         return $o;
     }
 

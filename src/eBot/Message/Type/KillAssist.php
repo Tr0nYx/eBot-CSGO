@@ -12,7 +12,8 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class KillAssist extends Type {
+class KillAssist extends Type
+{
 
     public $userId = "";
     public $userName = "";
@@ -23,7 +24,8 @@ class KillAssist extends Type {
     public $killedUserTeam = "";
     public $killedUserSteamid = "";
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("KillAssist");
     }
 

@@ -9,24 +9,29 @@
 
 namespace eTools\Utils;
 
-abstract class Singleton {
+abstract class Singleton
+{
 
     protected static $instances = array();
 
-    public static function getInstance() {
+    public static function getInstance()
+    {
         $class = get_called_class();
         if (!isset(self::$instances[$class])) {
             self::$instances[$class] = new $class();
         }
+
         return self::$instances[$class];
     }
 
-    protected function __construct() {
-        
+    protected function __construct()
+    {
+
     }
 
-    final protected function __clone() {
-        
+    final protected function __clone()
+    {
+
     }
 
 }

@@ -12,7 +12,8 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class SwitchTeam extends Type {
+class SwitchTeam extends Type
+{
 
     public $userId = "";
     public $userName = "";
@@ -20,7 +21,8 @@ class SwitchTeam extends Type {
     public $userSteamid = "";
     public $newTeam;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("SwitchTeam");
     }
 

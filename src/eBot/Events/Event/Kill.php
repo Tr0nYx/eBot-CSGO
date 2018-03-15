@@ -12,7 +12,8 @@ namespace eBot\Events\Event;
 
 use eBot\Events\Event;
 
-class Kill extends Event {
+class Kill extends Event
+{
 
     protected $match;
     protected $userId = "";
@@ -27,5 +28,3 @@ class Kill extends Event {
     protected $headshot;
 
 }
-
-?>

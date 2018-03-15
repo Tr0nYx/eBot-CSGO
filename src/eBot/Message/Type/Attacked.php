@@ -3,7 +3,9 @@
 namespace eBot\Message\Type;
 
 use eBot\Message\Type;
-class Attacked extends Type {
+
+class Attacked extends Type
+{
     public $attackerName = "";
     public $attackerUserId = "";
     public $attackerSteamId = "";
@@ -26,9 +28,10 @@ class Attacked extends Type {
     public $victimHealth = 0;
     public $victimArmor = 0;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("Attacked");
-    }   
+    }
 }
 
 ?>

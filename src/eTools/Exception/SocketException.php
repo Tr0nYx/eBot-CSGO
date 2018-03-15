@@ -9,8 +9,9 @@
 
 namespace eTools\Exception;
 
-class SocketException extends \Exception {
-    
+class SocketException extends \Exception
+{
+
 }
 
 ?>

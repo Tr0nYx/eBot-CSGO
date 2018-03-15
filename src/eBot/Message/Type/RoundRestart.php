@@ -11,9 +11,11 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class RoundRestart extends Type {
+class RoundRestart extends Type
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("RoundRestart");
     }
 

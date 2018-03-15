@@ -11,13 +11,15 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class RemindRoundScored extends Type {
+class RemindRoundScored extends Type
+{
 
     public $team;
     public $team_win;
     public $type;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->setName("RemindRoundScored");
     }
 

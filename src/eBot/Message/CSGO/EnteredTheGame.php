@@ -12,13 +12,18 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\EnteredTheGame as Object;
 
-class EnteredTheGame extends Message {
+class EnteredTheGame extends Message
+{
 
-    public function __construct() {
-        parent::__construct('/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<][>]" entered the game/');
+    public function __construct()
+    {
+        parent::__construct(
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<][>]" entered the game/'
+        );
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
         $o->setUserId($this->datas['user_id']);
         $o->setUserName($this->datas['user_name']);

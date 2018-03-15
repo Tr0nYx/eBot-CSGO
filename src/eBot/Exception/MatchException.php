@@ -9,8 +9,7 @@
 
 namespace eBot\Exception;
 
-class MatchException extends \Exception {
+class MatchException extends \Exception
+{
 
 }
-
-?>

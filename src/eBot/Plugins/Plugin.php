@@ -9,17 +9,25 @@
 
 namespace eBot\Plugins;
 
-interface Plugin {
-	
-	public function init($config);
-	public function getEventList();
-	public function onStart();
-	public function onReload();
-	public function onEnd();
-	public function onEventAdded($name);
-	public function onEventRemoved($name);
-	public function onEvent($event);
-	
+interface Plugin
+{
+
+    public function init($config);
+
+    public function getEventList();
+
+    public function onStart();
+
+    public function onReload();
+
+    public function onEnd();
+
+    public function onEventAdded($name);
+
+    public function onEventRemoved($name);
+
+    public function onEvent($event);
+
 }
 
 ?>

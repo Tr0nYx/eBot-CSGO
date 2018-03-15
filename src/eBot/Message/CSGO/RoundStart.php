@@ -13,13 +13,16 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\RoundStart as Object;
 
-class RoundStart extends Message {
+class RoundStart extends Message
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('/^World triggered "Round_Start"/');
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
         $o->setTime(time());
 

@@ -12,10 +12,12 @@ namespace eTools\Socket;
 use eTools\Exception\SocketException;
 use eTools\Utils\Logger;
 
-class UDPSocket {
+class UDPSocket
+{
     private $socket = null;
 
-    public function __construct($bot_ip, $bot_port) {
+    public function __construct($bot_ip, $bot_port)
+    {
         Logger::debug("Creating $bot_ip:$bot_port");
         $this->socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
         if ($this->socket) {
@@ -31,17 +33,20 @@ class UDPSocket {
         }
     }
 
-    public function recvfrom(&$ip) {
+    public function recvfrom(&$ip)
+    {
         $int = @socket_recvfrom($this->socket, $line, 1500, 0, $from, $port);
         if ($int) {
-            $ip = $from . ":" . $port;
+            $ip = $from.":".$port;
+
             return $line;
         } else {
             usleep(1000);
         }
     }
 
-    public function sendto($mess, $ip, $port) {
+    public function sendto($mess, $ip, $port)
+    {
         return socket_sendto($this->socket, $mess, strlen($mess), 0, $ip, $port);
     }
 }

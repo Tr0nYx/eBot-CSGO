@@ -12,9 +12,11 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class GotTheBomb extends Type {
+class GotTheBomb extends Type
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("GotTheBomb");
     }
 

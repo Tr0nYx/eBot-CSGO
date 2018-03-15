@@ -12,7 +12,8 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class Say extends Type {
+class Say extends Type
+{
 
     const SAY_TEAM = 1;
     const SAY = 0;
@@ -24,7 +25,8 @@ class Say extends Type {
     public $text;
     public $type;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("Say");
     }
 

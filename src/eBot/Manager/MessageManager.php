@@ -13,14 +13,16 @@ namespace eBot\Manager;
 use eTools\Utils\Logger;
 use eBot\Message\Message;
 
-class MessageManager {
+class MessageManager
+{
 
     protected static $instances = array();
 
-    public static function createFromConfigFile() {
-        Logger::debug("Loading " . APP_ROOT . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "messages.ini");
-        if (file_exists(APP_ROOT . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "messages.ini")) {
-            $data = parse_ini_file(APP_ROOT . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "messages.ini", true);
+    public static function createFromConfigFile()
+    {
+        Logger::debug("Loading ".APP_ROOT.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."messages.ini");
+        if (file_exists(APP_ROOT.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."messages.ini")) {
+            $data = parse_ini_file(APP_ROOT.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."messages.ini", true);
 
             foreach ($data as $k => $game) {
                 MessageManager::getInstance($k);
@@ -30,32 +32,37 @@ class MessageManager {
                     }
                 }
 
-                Logger::log(MessageManager::getInstance($k)->count() . " messages loaded for $k ");
+                Logger::log(MessageManager::getInstance($k)->count()." messages loaded for $k ");
             }
         }
     }
 
-    public static function & getInstance($name) {
+    public static function & getInstance($name)
+    {
         if (!isset(self::$instances[$name])) {
             self::$instances[$name] = new MessageManager($name);
         }
+
         return self::$instances[$name];
     }
 
     private $messages = array();
     private $name;
 
-    public function __construct($name) {
+    public function __construct($name)
+    {
         $this->name = $name;
         Logger::debug("Creating MessageManager $name");
     }
 
-    public function addMessage(Message $message) {
-        Logger::log("Adding message " . get_class($message) . " to " . $this->name);
+    public function addMessage(Message $message)
+    {
+        Logger::log("Adding message ".get_class($message)." to ".$this->name);
         $this->messages[] = $message;
     }
 
-    public function processMessage($data) {
+    public function processMessage($data)
+    {
         foreach ($this->messages as $message) {
             if ($message->match($data)) {
                 return $message->process();
@@ -65,10 +72,9 @@ class MessageManager {
         return null;
     }
 
-    public function count() {
+    public function count()
+    {
         return count($this->messages);
     }
 
 }
-
-?>

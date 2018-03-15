@@ -12,7 +12,8 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class Purchased extends Type {
+class Purchased extends Type
+{
 
     public $userId = "";
     public $userName = "";
@@ -20,7 +21,8 @@ class Purchased extends Type {
     public $userSteamid = "";
     public $object;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("Purchased");
     }
 

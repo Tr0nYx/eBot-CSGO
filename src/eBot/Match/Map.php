@@ -12,7 +12,8 @@ namespace eBot\Match;
 
 use eTools\Utils\Logger;
 
-class Map {
+class Map
+{
 
     const STATUS_NOT_STARTED = 0;
     const STATUS_STARTING = 1;
@@ -43,8 +44,9 @@ class Map {
     private $nbMaxRound = 15;
     private $tvRecordFile = "";
 
-    public function __construct($mapData) {
-        Logger::debug("Creating maps " . $mapData["id"]);
+    public function __construct($mapData)
+    {
+        Logger::debug("Creating maps ".$mapData["id"]);
         $this->setMapId($mapData["id"]);
         $this->setMapName($mapData["map_name"]);
         $this->setScore1($mapData["score_1"]);
@@ -55,22 +57,27 @@ class Map {
         $this->setNbOt($mapData["nb_ot"]);
         $this->setTvRecordFile($mapData['tv_record_file']);
 
-        Logger::log("Maps loaded " . $this->getMapName() . " (score: " . $this->getScore1() . " - " . $this->getScore2() . ") - Current left side: " . $this->getCurrentSide() . " - Current status: " . $this->getStatusText());
+        Logger::log(
+            "Maps loaded ".$this->getMapName()." (score: ".$this->getScore1()." - ".$this->getScore2().") - Current left side: ".$this->getCurrentSide()." - Current status: ".$this->getStatusText()
+        );
 
-        $query = mysql_query("SELECT * FROM maps_score WHERE map_id = '" . $this->map_id . "' ORDER BY created_at DESC");
-        while ($r = mysql_fetch_array($query)) {
+        $query = mysqli_query("SELECT * FROM maps_score WHERE map_id = '".$this->map_id."' ORDER BY created_at DESC");
+        while ($r = mysqli_fetch_array($query)) {
             $this->scores[] = new Score($r);
         }
 
         if (count($this->scores) == 0) {
-            mysql_query("INSERT INTO maps_score (`map_id`,`type_score`,`score1_side1`,`score1_side2`,`score2_side1`,`score2_side2`, `created_at`,`updated_at`) VALUES ('" . $mapData["id"] . "', 'normal',0,0,0,0, NOW(), NOW())");
-            $r = mysql_fetch_array(mysql_query("SELECT * FROM maps_score WHERE id='" . \mysql_insert_id() . "'"));
+            mysqli_query(
+                "INSERT INTO maps_score (`map_id`,`type_score`,`score1_side1`,`score1_side2`,`score2_side1`,`score2_side2`, `created_at`,`updated_at`) VALUES ('".$mapData["id"]."', 'normal',0,0,0,0, NOW(), NOW())"
+            );
+            $r = mysqli_fetch_array(mysqli_query("SELECT * FROM maps_score WHERE id='".mysqli_insert_id()."'"));
 
             $this->scores[] = new Score($r);
         }
     }
 
-    public function addRound($team) {
+    public function addRound($team)
+    {
         $score_teamA = 0;
         $score_teamB = 0;
 
@@ -103,23 +110,28 @@ class Map {
         $this->score1 += $score_teamA;
         $this->score2 += $score_teamB;
 
-        @mysql_query("UPDATE `maps` SET score_1 = '" . $this->score1 . "', score_2 = '" . $this->score2 . "' WHERE id='" . $this->map_id . "'");
+        mysqli_query(
+            "UPDATE `maps` SET score_1 = '".$this->score1."', score_2 = '".$this->score2."' WHERE id='".$this->map_id."'"
+        );
 
         return $team;
     }
 
-    public function getCurrentScore() {
+    public function getCurrentScore()
+    {
         end($this->scores);
         $score = current($this->scores);
         if ($score) {
             return $score;
         } else {
             Logger::error("Can't find score");
+
             return null;
         }
     }
 
-    public function removeLastScore() {
+    public function removeLastScore()
+    {
         end($this->scores);
         $score = current($this->scores);
         if ($score) {
@@ -128,7 +140,8 @@ class Map {
                 $score->setScore2Side2(0);
                 $score->saveScore();
                 $this->calculScores();
-            } elseif ($this->getStatus() == self::STATUS_FIRST_SIDE || $this->getStatus() == self::STATUS_OT_FIRST_SIDE) {
+            } elseif ($this->getStatus() == self::STATUS_FIRST_SIDE || $this->getStatus() == self::STATUS_OT_FIRST_SIDE
+            ) {
                 $score->setScore1Side1(0);
                 $score->setScore2Side1(0);
                 $score->saveScore();
@@ -141,7 +154,8 @@ class Map {
         }
     }
 
-    public function calculScores() {
+    public function calculScores()
+    {
         $a = 0;
         $b = 0;
         foreach ($this->scores as $score) {
@@ -151,20 +165,26 @@ class Map {
 
         $this->setScore1($a);
         $this->setScore2($b);
-        @mysql_query("UPDATE `maps` SET score_1 = '" . $this->score1 . "', score_2 = '" . $this->score2 . "' WHERE id='" . $this->map_id . "'");
+        mysqli_query(
+            "UPDATE `maps` SET score_1 = '".$this->score1."', score_2 = '".$this->score2."' WHERE id='".$this->map_id."'"
+        );
     }
 
-    public function addOvertime() {
-        mysql_query("INSERT INTO maps_score (`map_id`,`type_score`,`score1_side1`,`score1_side2`,`score2_side1`,`score2_side2`, `created_at`,`updated_at`) VALUES ('" . $this->map_id . "', 'ot',0,0,0,0, NOW(), NOW())");
-        $r = mysql_fetch_array(mysql_query("SELECT * FROM maps_score WHERE id='" . \mysql_insert_id() . "'"));
+    public function addOvertime()
+    {
+        mysqli_query(
+            "INSERT INTO maps_score (`map_id`,`type_score`,`score1_side1`,`score1_side2`,`score2_side1`,`score2_side2`, `created_at`,`updated_at`) VALUES ('".$this->map_id."', 'ot',0,0,0,0, NOW(), NOW())"
+        );
+        $r = mysqli_fetch_array(mysqli_query("SELECT * FROM maps_score WHERE id='".\mysql_insert_id()."'"));
 
         $this->scores[] = new Score($r);
 
         $this->nb_ot++;
-        mysql_query("UPDATE `maps` SET nb_ot = '" . $this->nb_ot . "' WHERE id = '" . $this->map_id . "'");
+        mysqli_query("UPDATE `maps` SET nb_ot = '".$this->nb_ot."' WHERE id = '".$this->map_id."'");
     }
 
-    public function getStatusText() {
+    public function getStatusText()
+    {
         switch ($this->getStatus()) {
             case self::STATUS_NOT_STARTED:
                 return "Not started";
@@ -179,136 +199,162 @@ class Map {
             case self::STATUS_WU_1_SIDE:
                 return "Warmup first side";
             case self::STATUS_FIRST_SIDE:
-                return "First side - Round #" . $this->getNbRound();
+                return "First side - Round #".$this->getNbRound();
             case self::STATUS_WU_2_SIDE:
                 return "Warmup second side";
             case self::STATUS_SECOND_SIDE:
-                return "Second side - Round #" . $this->getNbRound();
+                return "Second side - Round #".$this->getNbRound();
             case self::STATUS_WU_OT_1_SIDE:
                 return "Warmup first side OverTime";
             case self::STATUS_OT_FIRST_SIDE:
-                return "First side OverTime - Round #" . $this->getNbRound();
+                return "First side OverTime - Round #".$this->getNbRound();
             case self::STATUS_WU_OT_2_SIDE:
                 return "Warmup second side OverTime";
             case self::STATUS_OT_SECOND_SIDE:
-                return "Second side OverTime - Round #" . $this->getNbRound();
+                return "Second side OverTime - Round #".$this->getNbRound();
             case self::STATUS_MAP_ENDED:
                 return "Finished";
         }
     }
 
-    public function getNbRound() {
+    public function getNbRound()
+    {
         return $this->getScore1() + $this->getScore2() + 1;
     }
 
-    public function getMapId() {
+    public function getMapId()
+    {
         return $this->map_id;
     }
 
-    public function setMapId($map_id) {
-        if ($map_id == "")
+    public function setMapId($map_id)
+    {
+        if ($map_id == "") {
             return;
+        }
         $this->map_id = $map_id;
     }
 
-    public function getMapName() {
+    public function getMapName()
+    {
         return $this->map_name;
     }
 
-    public function setMapName($map_name) {
-        if ($map_name == "")
+    public function setMapName($map_name)
+    {
+        if ($map_name == "") {
             return;
+        }
         $this->map_name = $map_name;
     }
 
-    public function getScore1() {
+    public function getScore1()
+    {
         return $this->score1;
     }
 
-    public function setScore1($score1) {
-        if (!is_numeric($score1))
+    public function setScore1($score1)
+    {
+        if (!is_numeric($score1)) {
             $score1 = 0;
+        }
         $this->score1 = $score1;
     }
 
-    public function getScore2() {
+    public function getScore2()
+    {
         return $this->score2;
     }
 
-    public function setScore2($score2) {
-        if (!is_numeric($score2))
+    public function setScore2($score2)
+    {
+        if (!is_numeric($score2)) {
             $score2 = 0;
+        }
         $this->score2 = $score2;
     }
 
-    public function getCurrentSide() {
+    public function getCurrentSide()
+    {
         return $this->current_side;
     }
 
-    public function setCurrentSide($current_side, $save = false) {
+    public function setCurrentSide($current_side, $save = false)
+    {
         if ($current_side == "ct" || $current_side == "t") {
             $this->current_side = $current_side;
 
             if ($save) {
-                mysql_query("UPDATE `maps` SET current_side='" . $current_side . "' WHERE id='" . $this->map_id . "'") or Logger::error("Error while updating current side " . mysql_error());
+                mysqli_query(
+                    "UPDATE `maps` SET current_side='".$current_side."' WHERE id='".$this->map_id."'"
+                ) or Logger::error("Error while updating current side ".mysql_error());
             }
         }
     }
 
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
-    public function setStatus($newStatus, $save = false) {
+    public function setStatus($newStatus, $save = false)
+    {
         $this->status = $newStatus;
 
         if ($save) {
-            Logger::debug("Updating status to " . $this->getStatusText() . " in database");
-            mysql_query("UPDATE `maps` SET status='" . $newStatus . "' WHERE id='" . $this->map_id . "'");
+            Logger::debug("Updating status to ".$this->getStatusText()." in database");
+            mysqli_query("UPDATE `maps` SET status='".$newStatus."' WHERE id='".$this->map_id."'");
         }
     }
 
-    public function getMapsFor() {
+    public function getMapsFor()
+    {
         return $this->maps_for;
     }
 
-    public function setMapsFor($maps_for) {
+    public function setMapsFor($maps_for)
+    {
         $this->maps_for = $maps_for;
     }
 
-    public function getNeedKnifeRound() {
+    public function getNeedKnifeRound()
+    {
         return $this->need_knife_round;
     }
 
-    public function setNeedKnifeRound($need) {
+    public function setNeedKnifeRound($need)
+    {
         $this->need_knife_round = $need;
     }
 
-    public function getNbOt() {
+    public function getNbOt()
+    {
         return $this->nb_ot;
     }
 
-    public function setNbOt($nb_ot) {
+    public function setNbOt($nb_ot)
+    {
         $this->nb_ot = $nb_ot;
     }
 
-    public function getNbMaxRound() {
+    public function getNbMaxRound()
+    {
         return $this->nbMaxRound;
     }
 
-    public function setNbMaxRound($nbMaxRound) {
+    public function setNbMaxRound($nbMaxRound)
+    {
         $this->nbMaxRound = $nbMaxRound;
     }
-    
-    public function getTvRecordFile() {
+
+    public function getTvRecordFile()
+    {
         return $this->tvRecordFile;
     }
 
-    public function setTvRecordFile($tvRecordName) {
+    public function setTvRecordFile($tvRecordName)
+    {
         $this->tvRecordFile = $tvRecordName;
     }
 
-
 }
-
-?>

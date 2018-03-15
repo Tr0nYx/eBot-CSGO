@@ -19,17 +19,20 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\TeamScored as Object;
 
-class TeamScored extends Message {
+class TeamScored extends Message
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('/^Team "(?P<team>CT|TERRORIST)" scored "(?P<score>\d+)" with "(?P<players>\d+)" players/');
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
-        $o->setTeam($this->datas["team"] == "CT" ? "ct": "t");
+        $o->setTeam($this->datas["team"] == "CT" ? "ct" : "t");
         $o->setScore($this->datas['score']);
-        $o->setPlayers($this->datas['players']);       
+        $o->setPlayers($this->datas['players']);
 
         return $o;
     }

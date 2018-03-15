@@ -12,9 +12,11 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class RoundEnd extends Type {
+class RoundEnd extends Type
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("RoundEnd");
     }
 

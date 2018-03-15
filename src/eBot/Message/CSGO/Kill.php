@@ -13,13 +13,18 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\Kill as Object;
 
-class Kill extends Message {
+class Kill extends Message
+{
 
-    public function __construct() {
-        parent::__construct('/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" \[(?P<killer_x>[\-]?[0-9]+) (?P<killer_y>[\-]?[0-9]+) (?P<killer_z>[\-]?[0-9]+)\] killed "(?P<killed_user_name>.+)[<](?P<killed_user_id>\d+)[>][<](?P<killed_steam_id>.*)[>][<](?P<killed_user_team>CT|TERRORIST|Unassigned|Spectator)[>]" \[(?P<killed_x>[\-]?[0-9]+) (?P<killed_y>[\-]?[0-9]+) (?P<killed_z>[\-]?[0-9]+)\] with "(?P<weapon>[a-zA-Z0-9_]+)"(?P<headshot>.*)/');
+    public function __construct()
+    {
+        parent::__construct(
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" \[(?P<killer_x>[\-]?[0-9]+) (?P<killer_y>[\-]?[0-9]+) (?P<killer_z>[\-]?[0-9]+)\] killed "(?P<killed_user_name>.+)[<](?P<killed_user_id>\d+)[>][<](?P<killed_steam_id>.*)[>][<](?P<killed_user_team>CT|TERRORIST|Unassigned|Spectator)[>]" \[(?P<killed_x>[\-]?[0-9]+) (?P<killed_y>[\-]?[0-9]+) (?P<killed_z>[\-]?[0-9]+)\] with "(?P<weapon>[a-zA-Z0-9_]+)"(?P<headshot>.*)/'
+        );
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
         $o->setUserId($this->datas['user_id']);
         $o->setUserName($this->datas['user_name']);
@@ -36,7 +41,7 @@ class Kill extends Message {
         $o->setKilledPosX($this->datas["killed_x"]);
         $o->setKilledPosY($this->datas["killed_y"]);
         $o->setKilledPosZ($this->datas["killed_z"]);
-        
+
         $o->setWeapon($this->datas['weapon']);
         $o->setHeadshot(preg_match("!headshot!", $this->datas['headshot']));
 

@@ -13,13 +13,16 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\RoundEnd as Object;
 
-class RoundEnd extends Message {
+class RoundEnd extends Message
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('/^World triggered "Round_End"/');
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
 
         return $o;

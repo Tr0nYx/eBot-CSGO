@@ -29,7 +29,7 @@ class ReportManager extends Singleton implements Taskable
         $report = array(
             'hash' => $this->getHash(),
             'ip' => Config::getInstance()->getBot_ip(),
-            'matches' => MatchManager::getInstance()->getMatchesCount()
+            'matches' => MatchManager::getInstance()->getMatchesCount(),
         );
 
         try {
@@ -47,15 +47,15 @@ class ReportManager extends Singleton implements Taskable
         $cparams = array(
             'http' => array(
                 'method' => $verb,
-                'ignore_errors' => true
-            )
+                'ignore_errors' => true,
+            ),
         );
         if ($params !== null) {
             $paramsU = http_build_query($params);
             if ($verb == 'POST') {
                 $cparams['http']['content'] = $params;
             } else {
-                $url .= '?' . $paramsU;
+                $url .= '?'.$paramsU;
             }
         }
 
@@ -77,6 +77,7 @@ class ReportManager extends Singleton implements Taskable
                 if ($r === null) {
                     throw new \Exception("failed to decode $res as json");
                 }
+
                 return $r;
 
             case 'xml':
@@ -84,14 +85,20 @@ class ReportManager extends Singleton implements Taskable
                 if ($r === null) {
                     throw new \Exception("failed to decode $res as xml");
                 }
+
                 return $r;
         }
+
         return $res;
     }
 
     private function getHash()
     {
-        $hash = md5(Config::getInstance()->getBot_ip() . ':' . Config::getInstance()->getBot_port() . ':' . Config::getInstance()->getMysql_ip() . ':' . Config::getInstance()->getMysql_user() . ':' . Config::getInstance()->getMysql_pass());
+        $hash = md5(
+            Config::getInstance()->getBot_ip().':'.Config::getInstance()->getBot_port().':'.Config::getInstance(
+            )->getMysql_ip().':'.Config::getInstance()->getMysql_user().':'.Config::getInstance()->getMysql_pass()
+        );
+
         return $hash;
 
     }

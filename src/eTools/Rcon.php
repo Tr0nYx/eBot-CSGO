@@ -10,40 +10,49 @@
 
 namespace eTools;
 
-abstract class Rcon {
+abstract class Rcon
+{
 
     protected $ip;
     protected $port;
     protected $rcon;
     protected $status;
 
-    public function __construct($ip, $port, $rcon) {
+    public function __construct($ip, $port, $rcon)
+    {
         $this->ip = $ip;
         $this->port = $port;
         $this->rcon = $rcon;
 
         if (!$this->auth()) {
-            throw new \eBot\Exception\MatchException("Can't auth to rcon " . $this->ip . ":" . $this->port . " (" . $this->error . ")");
+            throw new \eBot\Exception\MatchException(
+                "Can't auth to rcon ".$this->ip.":".$this->port." (".$this->error.")"
+            );
         }
     }
 
-    public function getIp() {
+    public function getIp()
+    {
         return $this->ip;
     }
 
-    public function getPort() {
+    public function getPort()
+    {
         return $this->port;
     }
 
-    public function getRcon() {
+    public function getRcon()
+    {
         return $this->rcon;
     }
 
-    public function getError() {
+    public function getError()
+    {
         return $this->error;
     }
 
-    public function getState() {
+    public function getState()
+    {
         return $this->status;
     }
 

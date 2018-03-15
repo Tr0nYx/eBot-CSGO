@@ -12,17 +12,17 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class BombPlanting extends Type {
+class BombPlanting extends Type
+{
 
     public $userId = "";
     public $userName = "";
     public $userTeam = "";
     public $userSteamid = "";
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("BombPlanting");
     }
 
 }
-
-?>

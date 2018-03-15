@@ -13,14 +13,19 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\JoinTeam as Object;
 
-class SwitchTeam extends Message {
+class SwitchTeam extends Message
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         // "Opie<11><BOT>" switched from team <CT> to <TERRORIST>
-        parent::__construct('/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>]" switched from team [<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>] to [<](?P<new_team>CT|TERRORIST|Unassigned|Spectator)[>]/');
+        parent::__construct(
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>]" switched from team [<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>] to [<](?P<new_team>CT|TERRORIST|Unassigned|Spectator)[>]/'
+        );
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
         $o->setUserId($this->datas['user_id']);
         $o->setUserName($this->datas['user_name']);

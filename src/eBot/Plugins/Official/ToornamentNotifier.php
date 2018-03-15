@@ -35,7 +35,7 @@ class ToornamentNotifier implements Plugin
             throw new PluginException("url null");
         }
 
-        Logger::log("URL to perform: " . $this->url);
+        Logger::log("URL to perform: ".$this->url);
     }
 
     public function onEvent($event)
@@ -47,13 +47,13 @@ class ToornamentNotifier implements Plugin
                     $opts = array(
                         'http' => array(
                             'method' => "GET",
-                            'header' => "Connection: Close\r\n" .
-                                "X-Plugin-Key: " . $this->key
-                        )
+                            'header' => "Connection: Close\r\n".
+                                "X-Plugin-Key: ".$this->key,
+                        ),
                     );
 
                     $context = stream_context_create($opts);
-                    Logger::log($event->getMatch()->getId() . " - Perf $url");
+                    Logger::log($event->getMatch()->getId()." - Perf $url");
                     file_get_contents($url, false, $context);
                 }
                 break;
@@ -72,17 +72,17 @@ class ToornamentNotifier implements Plugin
 
     public function onReload()
     {
-        Logger::log("Reloading " . get_class($this));
+        Logger::log("Reloading ".get_class($this));
     }
 
     public function onStart()
     {
-        Logger::log("Starting " . get_class($this));
+        Logger::log("Starting ".get_class($this));
     }
 
     public function onEnd()
     {
-        Logger::log("Ending " . get_class($this));
+        Logger::log("Ending ".get_class($this));
     }
 
     public function getEventList()

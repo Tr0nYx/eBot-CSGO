@@ -13,13 +13,18 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\ThrewStuff as Object;
 
-class ThrewStuff extends Message {
+class ThrewStuff extends Message
+{
 
-    public function __construct() {
-        parent::__construct('/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" threw (?P<stuff>hegrenade|flashbang|smokegrenade|decoy|molotov) \[(?P<pos_x>[\-]?[0-9]+) (?P<pos_y>[\-]?[0-9]+) (?P<pos_z>[\-]?[0-9]+)\]/');
+    public function __construct()
+    {
+        parent::__construct(
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" threw (?P<stuff>hegrenade|flashbang|smokegrenade|decoy|molotov) \[(?P<pos_x>[\-]?[0-9]+) (?P<pos_y>[\-]?[0-9]+) (?P<pos_z>[\-]?[0-9]+)\]/'
+        );
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
         $o->setUserId($this->datas['user_id']);
         $o->setUserName($this->datas['user_name']);
@@ -29,7 +34,7 @@ class ThrewStuff extends Message {
         $o->setPosY($this->datas["pos_y"]);
         $o->setPosZ($this->datas["pos_z"]);
         $o->setStuff($this->datas["stuff"]);
-        
+
         return $o;
     }
 

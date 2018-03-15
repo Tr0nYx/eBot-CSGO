@@ -12,13 +12,15 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class TeamScored extends Type {
+class TeamScored extends Type
+{
 
     public $team;
     public $score;
     public $players;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("TeamScored");
     }
 

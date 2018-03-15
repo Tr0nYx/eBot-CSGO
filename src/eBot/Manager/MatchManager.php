@@ -2,6 +2,8 @@
 
 namespace eBot\Manager;
 
+use eBot\Config\Config;
+use eBot\Exception\MatchException;
 use eTools\Utils\Singleton;
 use eTools\Task\Taskable;
 use eTools\Task\Task;
@@ -10,7 +12,8 @@ use eTools\Utils\Logger;
 use eBot\Match\Match;
 use eBot\Exception\Match_Exception;
 
-class MatchManager extends Singleton implements Taskable {
+class MatchManager extends Singleton implements Taskable
+{
 
     const VERSION = "1.1";
     const CHECK_NEW_MATCH = "check";
@@ -20,12 +23,14 @@ class MatchManager extends Singleton implements Taskable {
     private $busyServers = array();
     private $retry = array();
 
-    public function __construct() {
-        Logger::log("Creating MatchManager version " . self::VERSION);
+    public function __construct()
+    {
+        Logger::log("Creating MatchManager version ".self::VERSION);
         TaskManager::getInstance()->addTask(new Task($this, self::CHECK_NEW_MATCH, microtime(true) + 0.2), true);
     }
 
-    public function sendPub() {
+    public function sendPub()
+    {
         foreach ($this->matchs as $k => $match) {
             if ($match->getStatus() == Match::STATUS_END_MATCH) {
                 if ($match->getNeedDelTask()) {
@@ -50,63 +55,80 @@ class MatchManager extends Singleton implements Taskable {
         }
     }
 
-    private function check() {
-        Logger::debug("Checking for new match (current matchs: " . count($this->matchs) . ")");
+    private function check()
+    {
+        Logger::debug("Checking for new match (current matchs: ".count($this->matchs).")");
 
-        $sql = mysql_query("SELECT m.team_a_name as team_a_name, m.team_b_name as team_b_name, m.id as match_id, m.config_authkey as config_authkey, t_a.name as team_a, t_b.name as team_b, s.id as server_id, s.ip as server_ip, s.rcon as server_rcon FROM `matchs` m LEFT JOIN `servers` s ON s.id = m.server_id LEFT JOIN `teams` t_a ON t_a.id = m.team_a LEFT JOIN `teams` t_b ON t_b.id = m.team_b WHERE m.`auto_start` = '1' AND UNIX_TIMESTAMP(m.`startdate`) <= (m.`auto_start_time`*60)+" . time() . " AND UNIX_TIMESTAMP(m.`startdate`) > " . time()) or die(mysql_error());
-        if (!mysql_num_rows($sql))
-            $sql = mysql_query("SELECT m.team_a_name as team_a_name, m.team_b_name as team_b_name, m.id as match_id, m.config_authkey as config_authkey, t_a.name as team_a, t_b.name as team_b, s.id as server_id, s.ip as server_ip, s.rcon as server_rcon FROM `matchs` m LEFT JOIN `servers` s ON s.id = m.server_id LEFT JOIN `teams` t_a ON t_a.id = m.team_a LEFT JOIN `teams` t_b ON t_b.id = m.team_b WHERE m.`status` >= " . Match::STATUS_STARTING . " AND m.`status` < " . Match::STATUS_END_MATCH . " AND m.`enable` = 1") or die(mysql_error());
-        while ($req = mysql_fetch_assoc($sql)) {
+        $sql = mysqli_query(
+            "SELECT m.team_a_name as team_a_name, m.team_b_name as team_b_name, m.id as match_id, m.config_authkey as config_authkey, t_a.name as team_a, t_b.name as team_b, s.id as server_id, s.ip as server_ip, s.rcon as server_rcon FROM `matchs` m LEFT JOIN `servers` s ON s.id = m.server_id LEFT JOIN `teams` t_a ON t_a.id = m.team_a LEFT JOIN `teams` t_b ON t_b.id = m.team_b WHERE m.`auto_start` = '1' AND UNIX_TIMESTAMP(m.`startdate`) <= (m.`auto_start_time`*60)+".time(
+            )." AND UNIX_TIMESTAMP(m.`startdate`) > ".time()
+        ) or die(mysqli_error());
+        if (mysqli_num_rows($sql)) {
+            $sql = mysqli_query(
+                "SELECT m.team_a_name as team_a_name, m.team_b_name as team_b_name, m.id as match_id, m.config_authkey as config_authkey, t_a.name as team_a, t_b.name as team_b, s.id as server_id, s.ip as server_ip, s.rcon as server_rcon FROM `matchs` m LEFT JOIN `servers` s ON s.id = m.server_id LEFT JOIN `teams` t_a ON t_a.id = m.team_a LEFT JOIN `teams` t_b ON t_b.id = m.team_b WHERE m.`status` >= ".Match::STATUS_STARTING." AND m.`status` < ".Match::STATUS_END_MATCH." AND m.`enable` = 1"
+            ) or die(mysqli_error());
+        }
+        while ($req = mysqli_fetch_assoc($sql)) {
             if (!@$this->matchs[$req['server_ip']]) {
                 try {
                     $teamA = $this->getTeamDetails($req['team_a'], 'a', $req);
                     $teamB = $this->getTeamDetails($req['team_a'], 'b', $req);
-                    Logger::log("New match detected - " . $teamA['name'] . " vs " . $teamB['name'] . " on " . $req['server_ip']);
-                    //\mysql_query("UPDATE `matchs` SET `enable` = 1, `status` = " . Match::STATUS_STARTING . " WHERE `id` = " . $req["match_id"] . "");
+                    Logger::log("New match detected - ".$teamA['name']." vs ".$teamB['name']." on ".$req['server_ip']);
+                    //mysqli_query("UPDATE `matchs` SET `enable` = 1, `status` = " . Match::STATUS_STARTING . " WHERE `id` = " . $req["match_id"] . "");
                     $this->newMatch($req["match_id"], $req['server_ip'], $req['server_rcon'], $req['config_authkey']);
                 } catch (MatchException $ex) {
                     Logger::error("Error while creating the match");
-                    mysql_query("UPDATE `matchs` SET enable=0, auto_start = 0 WHERE id = '" . $req['match_id'] . "'") or die(mysql_error());
+                    mysqli_query(
+                        "UPDATE `matchs` SET enable=0, auto_start = 0 WHERE id = '".$req['match_id']."'"
+                    ) or die(mysqli_error());
                 } catch (\Exception $ex) {
                     if ($ex->getMessage() == "SERVER_BUSY") {
-                        Logger::error($req["server_ip"] . " is busy for " . ($this->busyServers[$req['server_ip']] - time(). " seconds"));
+                        Logger::error(
+                            $req["server_ip"]." is busy for ".($this->busyServers[$req['server_ip']] - time(
+                                )." seconds")
+                        );
                     } elseif ($ex->getMessage() == "MATCH_ALREADY_PLAY_ON_THIS_SERVER") {
-                        Logger::error("A match is already playing on " . $req["server_ip"]);
+                        Logger::error("A match is already playing on ".$req["server_ip"]);
                     }
                 }
             }
         }
 
         TaskManager::getInstance()->addTask(new Task($this, self::CHECK_NEW_MATCH, microtime(true) + 3), true);
-        Logger::debug("End checking (current matchs: " . count($this->matchs) . ")");
+        Logger::debug("End checking (current matchs: ".count($this->matchs).")");
     }
 
-    private function busyIp($ip) {
-        if (\eBot\Config\Config::getInstance()->getDelay_busy_server() > 0) {
-            $this->busyServers[$ip] = time() + \eBot\Config\Config::getInstance()->getDelay_busy_server();
-            Logger::log("Busying $ip for " . \eBot\Config\Config::getInstance()->getDelay_busy_server() . " seconds");
+    private function busyIp($ip)
+    {
+        if (Config::getInstance()->getDelay_busy_server() > 0) {
+            $this->busyServers[$ip] = time() + Config::getInstance()->getDelay_busy_server();
+            Logger::log("Busying $ip for ".Config::getInstance()->getDelay_busy_server()." seconds");
         }
     }
 
-    public function delayServer($ip, $delay = null) {
+    public function delayServer($ip, $delay = null)
+    {
         if (!@$this->busyServers[$ip]) {
             if ($delay == null) {
-                $delay = \eBot\Config\Config::getInstance()->getDelay_busy_server();
+                $delay = Config::getInstance()->getDelay_busy_server();
             }
             $this->busyServers[$ip] = time() + $delay;
             Logger::log("Delay $ip for $delay seconds");
         }
     }
-    
-    public function setRetry($id, $number) {
+
+    public function setRetry($id, $number)
+    {
         $this->retry[$id] = $number;
     }
-    
-    public function getRetry($id) {
+
+    public function getRetry($id)
+    {
         return $this->retry[$id];
     }
 
-    private function newMatch($match_id, $ip, $rcon, $authkey) {
+    private function newMatch($match_id, $ip, $rcon, $authkey)
+    {
         if (@$this->busyServers[$ip]) {
             if (time() > $this->busyServers[$ip]) {
                 unset($this->busyServers[$ip]);
@@ -125,13 +147,15 @@ class MatchManager extends Singleton implements Taskable {
         }
     }
 
-    public function taskExecute($name) {
+    public function taskExecute($name)
+    {
         if ($name == "check") {
             $this->check();
         }
     }
 
-    public function getMatch($ip) {
+    public function getMatch($ip)
+    {
         if (@$this->matchs[$ip]) {
             return $this->matchs[$ip];
         } else {
@@ -139,7 +163,8 @@ class MatchManager extends Singleton implements Taskable {
         }
     }
 
-    public function getAuthkey($ip) {
+    public function getAuthkey($ip)
+    {
         if (@$this->authkeys[$ip]) {
             return $this->authkeys[$ip];
         } else {
@@ -147,9 +172,11 @@ class MatchManager extends Singleton implements Taskable {
         }
     }
 
-    private function getTeamDetails($id, $t, $data) {
+    private function getTeamDetails($id, $t, $data)
+    {
         if (is_numeric($id) && $id > 0) {
-            $ds = mysql_fetch_array(mysql_query("SELECT * FROM `teams` WHERE `id` = '$id'"));
+            $ds = mysqli_fetch_array(mysqli_query(null,"SELECT * FROM `teams` WHERE `id` = '".$id."'"));
+
             return $ds;
         } else {
             if ($t == "a") {
@@ -160,9 +187,8 @@ class MatchManager extends Singleton implements Taskable {
         }
     }
 
-    public function getMatchesCount() {
+    public function getMatchesCount()
+    {
         return count($this->matchs);
     }
 }
-
-?>

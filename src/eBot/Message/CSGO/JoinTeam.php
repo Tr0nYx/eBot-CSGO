@@ -12,13 +12,18 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\JoinTeam as Object;
 
-class JoinTeam extends Message {
+class JoinTeam extends Message
+{
 
-    public function __construct() {
-        parent::__construct('/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" joined team "(?P<join_team>CT|TERRORIST|Unassigned|Spectator)"/');
+    public function __construct()
+    {
+        parent::__construct(
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" joined team "(?P<join_team>CT|TERRORIST|Unassigned|Spectator)"/'
+        );
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
         $o->setUserId($this->datas['user_id']);
         $o->setUserName($this->datas['user_name']);

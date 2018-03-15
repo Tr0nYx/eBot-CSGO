@@ -12,11 +12,13 @@ namespace eBot\Message\Type;
 
 use eBot\Message\Type;
 
-class RoundSpawn extends Type {
+class RoundSpawn extends Type
+{
 
     public $time = 0;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setName("RoundSpawn");
     }
 

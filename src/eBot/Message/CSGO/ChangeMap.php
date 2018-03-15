@@ -12,15 +12,19 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\ChangeMap as Object;
 
-class ChangeMap extends Message {
+class ChangeMap extends Message
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('/^(Started map|Loading map) "(?P<maps>.*)"/');
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
         $o->setMaps($this->datas["maps"]);
+
         return $o;
     }
 

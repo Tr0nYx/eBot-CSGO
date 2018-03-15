@@ -19,21 +19,24 @@ use eBot\Exception\PluginException;
  *
  * @author jpardons
  */
-class PluginMatchScoreNotifier implements Plugin {
+class PluginMatchScoreNotifier implements Plugin
+{
 
     private $url;
 
-    public function init($config) {
+    public function init($config)
+    {
         Logger::log("Init PluginMatchScoreNotifier");
         $this->url = $config["url"];
         if ($this->url == "") {
             throw new PluginException("url null");
         }
 
-        Logger::log("URL to perform: " . $this->url);
+        Logger::log("URL to perform: ".$this->url);
     }
 
-    public function onEvent($event) {
+    public function onEvent($event)
+    {
         switch (get_class($event)) {
             case \eBot\Events\EventDispatcher::EVENT_ROUNDSCORED:
                 if ($event->getMatch()->getIdentifier()) {
@@ -41,39 +44,45 @@ class PluginMatchScoreNotifier implements Plugin {
                     $opts = array(
                         'http' => array(
                             'method' => "GET",
-                            'header' => "Connection: Close"
-                        )
+                            'header' => "Connection: Close",
+                        ),
                     );
 
                     $context = stream_context_create($opts);
-                    Logger::log($event->getMatch()->getCurrentMapId() . " - Perf $url");
+                    Logger::log($event->getMatch()->getCurrentMapId()." - Perf $url");
                     file_get_contents($url, false, $context);
                 }
                 break;
         }
     }
 
-    public function onEventAdded($name) {
+    public function onEventAdded($name)
+    {
 
     }
 
-    public function onEventRemoved($name) {
+    public function onEventRemoved($name)
+    {
 
     }
 
-    public function onReload() {
-        Logger::log("Reloading " . get_class($this));
+    public function onReload()
+    {
+        Logger::log("Reloading ".get_class($this));
     }
 
-    public function onStart() {
-        Logger::log("Starting " . get_class($this));
+    public function onStart()
+    {
+        Logger::log("Starting ".get_class($this));
     }
 
-    public function onEnd() {
-        Logger::log("Ending " . get_class($this));
+    public function onEnd()
+    {
+        Logger::log("Ending ".get_class($this));
     }
 
-    public function getEventList() {
+    public function getEventList()
+    {
         return array(\eBot\Events\EventDispatcher::EVENT_ROUNDSCORED);
     }
 

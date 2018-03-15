@@ -9,25 +9,29 @@
 
 namespace eBot\Message;
 
-abstract class Message {
-	
-	protected $regex;
-	protected $datas;
-	
-	public function __construct($regex) {
-		$this->regex = $regex;
-	}
-	
-	function match($data) {
-		if (preg_match($this->regex, $data, $match)) {
-			$this->datas = $match;
-			return true;
-		}
-		
-		return false;
-	}
-	
-	abstract function process();
+abstract class Message
+{
+
+    protected $regex;
+    protected $datas;
+
+    public function __construct($regex)
+    {
+        $this->regex = $regex;
+    }
+
+    function match($data)
+    {
+        if (preg_match($this->regex, $data, $match)) {
+            $this->datas = $match;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    abstract function process();
 }
 
 ?>

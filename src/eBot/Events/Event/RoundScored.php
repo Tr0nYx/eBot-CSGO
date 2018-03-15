@@ -12,7 +12,8 @@ namespace eBot\Events\Event;
 
 use eBot\Events\Event;
 
-class RoundScored extends Event {
+class RoundScored extends Event
+{
 
     protected $match;
     protected $scoreA;
@@ -22,5 +23,3 @@ class RoundScored extends Event {
     protected $status;
 
 }
-
-?>

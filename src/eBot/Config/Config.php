@@ -25,9 +25,9 @@ class Config extends Singleton
     private $mysql_base;
     private $bot_ip;
     private $bot_port;
-	private $sslEnabled;
-	private $sslCertPath;
-	private $sslKeyPath;
+    private $sslEnabled;
+    private $sslCertPath;
+    private $sslKeyPath;
     private $messages = array();
     private $record_name = "ebot";
     private $delay_busy_server = 90;
@@ -47,12 +47,16 @@ class Config extends Singleton
     private $external_log_ip = "";
     private $node_startup_method = "node";
     private $useDelayEndRecord = false;
+    private $perf_link_on_update;
+    private $perf_link;
+    private $ot_rounds;
+    private $crypt_key;
 
     public function __construct()
     {
-        Logger::debug("Loading " . APP_ROOT . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "config.ini");
-        if (file_exists(APP_ROOT . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "config.ini")) {
-            $config = parse_ini_file(APP_ROOT . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "config.ini");
+        Logger::debug("Loading ".APP_ROOT.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."config.ini");
+        if (file_exists(APP_ROOT.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."config.ini")) {
+            $config = parse_ini_file(APP_ROOT.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."config.ini");
 
             $this->mysql_ip = $config["MYSQL_IP"];
             $this->mysql_port = $config["MYSQL_PORT"];
@@ -62,9 +66,9 @@ class Config extends Singleton
 
             $this->bot_ip = $config["BOT_IP"];
             $this->bot_port = $config["BOT_PORT"];
-	        $this->sslEnabled = $config["SSL_ENABLED"];
-	        $this->sslCertPath = $config["SSL_CERTIFICATE_PATH"];
-	        $this->sslKeyPath = $config["SSL_KEY_PATH"];
+            $this->sslEnabled = $config["SSL_ENABLED"];
+            $this->sslCertPath = $config["SSL_CERTIFICATE_PATH"];
+            $this->sslKeyPath = $config["SSL_KEY_PATH"];
 
             $this->delay_busy_server = $config["DELAY_BUSY_SERVER"];
 
@@ -76,8 +80,9 @@ class Config extends Singleton
 
             $this->demo_download = (bool)$config["DEMO_DOWNLOAD"];
             $this->external_log_ip = $config['EXTERNAL_LOG_IP'];
-            if (isset($config['NODE_STARTUP_METHOD']))
+            if (isset($config['NODE_STARTUP_METHOD'])) {
                 $this->node_startup_method = $config['NODE_STARTUP_METHOD'];
+            }
 
             $this->pause_method = $config["PAUSE_METHOD"];
 
@@ -85,14 +90,17 @@ class Config extends Singleton
             $this->config_knife_method = ($config['RECORD_METHOD'] == "knifestart") ? "knifestart" : "matchstart";
             $this->delay_ready = (bool)$config['DELAY_READY'];
 
-            if (isset($config['DAMAGE_REPORT']) && is_bool((bool)$config['DAMAGE_REPORT']))
+            if (isset($config['DAMAGE_REPORT']) && is_bool((bool)$config['DAMAGE_REPORT'])) {
                 $this->damage_report = (bool)$config['DAMAGE_REPORT'];
+            }
 
-            if (isset($config['REMIND_RECORD']) && is_bool((bool)$config['REMIND_RECORD']))
+            if (isset($config['REMIND_RECORD']) && is_bool((bool)$config['REMIND_RECORD'])) {
                 $this->remember_recordmsg = (bool)$config['REMIND_RECORD'];
+            }
 
-            if (isset($config['USE_DELAY_END_RECORD']) && is_bool((bool)$config['USE_DELAY_END_RECORD']))
+            if (isset($config['USE_DELAY_END_RECORD']) && is_bool((bool)$config['USE_DELAY_END_RECORD'])) {
                 $this->useDelayEndRecord = (bool)$config['USE_DELAY_END_RECORD'];
+            }
 
             Logger::debug("Configuration loaded");
         }
@@ -113,6 +121,7 @@ class Config extends Singleton
     public function setUseDelayEndRecord($useDelayEndRecord)
     {
         $this->useDelayEndRecord = $useDelayEndRecord;
+
         return $this;
     }
 
@@ -120,8 +129,10 @@ class Config extends Singleton
     public function scanAdvertising()
     {
         unset($this->advertising);
-        $q = \mysql_query("SELECT a.`season_id`, a.`message`, s.`name` FROM `advertising` a LEFT JOIN `seasons` s ON a.`season_id` = s.`id` WHERE a.`active` = 1");
-        while ($row = mysql_fetch_array($q, MYSQL_ASSOC)) {
+        $q = mysqli_query(
+            "SELECT a.`season_id`, a.`message`, s.`name` FROM `advertising` a LEFT JOIN `seasons` s ON a.`season_id` = s.`id` WHERE a.`active` = 1"
+        );
+        while ($row = mysqli_fetch_assoc($q)) {
             $this->advertising['message'][] = $row['message'];
             if ($row['season_id'] == null) {
                 $row['season_id'] = 0;
@@ -130,20 +141,30 @@ class Config extends Singleton
             $this->advertising['season_id'][] = intval($row['season_id']);
             $this->advertising['season_name'][] = $row['name'];
         }
-        array_multisort($this->advertising['season_id'], SORT_ASC, $this->advertising['season_name'], $this->advertising['message']);
+        array_multisort(
+            $this->advertising['season_id'],
+            SORT_ASC,
+            $this->advertising['season_name'],
+            $this->advertising['message']
+        );
     }
 
     public function printConfig()
     {
-        Logger::log("MySQL: " . $this->mysql_ip . ":" . $this->mysql_port . " " . $this->mysql_user . ":" . \str_repeat("*", \strlen($this->mysql_pass)) . "@" . $this->mysql_base);
-        Logger::log("Socket: " . $this->bot_ip . ":" . $this->bot_port);
+        Logger::log(
+            "MySQL: ".$this->mysql_ip.":".$this->mysql_port." ".$this->mysql_user.":".\str_repeat(
+                "*",
+                \strlen($this->mysql_pass)
+            )."@".$this->mysql_base
+        );
+        Logger::log("Socket: ".$this->bot_ip.":".$this->bot_port);
         Logger::log("Advertising by Season:");
         for ($i = 0; $i < count($this->advertising['message']); $i++) {
-            Logger::log("-> " . $this->advertising['season_name'][$i] . ": " . $this->advertising['message'][$i]);
+            Logger::log("-> ".$this->advertising['season_name'][$i].": ".$this->advertising['message'][$i]);
         }
         Logger::log("Maps:");
         foreach ($this->maps as $map) {
-            Logger::log("-> " . $map);
+            Logger::log("-> ".$map);
         }
     }
 
@@ -237,38 +258,41 @@ class Config extends Singleton
         $this->bot_port = $bot_port;
     }
 
-	public function isSSLEnabled()
-	{
-		return $this->sslEnabled;
-	}
+    public function isSSLEnabled()
+    {
+        return $this->sslEnabled;
+    }
 
-	public function setSSLEnabled($sslEnabled)
-	{
-		$this->sslEnabled = $sslEnabled;
-		return $this;
-	}
+    public function setSSLEnabled($sslEnabled)
+    {
+        $this->sslEnabled = $sslEnabled;
 
-	public function getSSLCertificatePath()
-	{
-		return $this->sslCertPath;
-	}
+        return $this;
+    }
 
-	public function setSSLCertificatePath($sslCertificatePath)
-	{
-		$this->sslCertPath = $sslCertificatePath;
-		return $this;
-	}
+    public function getSSLCertificatePath()
+    {
+        return $this->sslCertPath;
+    }
 
-	public function getSSLKeyPath()
-	{
-		return $this->sslKeyPath;
-	}
+    public function setSSLCertificatePath($sslCertificatePath)
+    {
+        $this->sslCertPath = $sslCertificatePath;
 
-	public function setSSLKeyPath($sslKeyPath)
-	{
-		$this->sslKeyPath = $sslKeyPath;
-		return $this;
-	}
+        return $this;
+    }
+
+    public function getSSLKeyPath()
+    {
+        return $this->sslKeyPath;
+    }
+
+    public function setSSLKeyPath($sslKeyPath)
+    {
+        $this->sslKeyPath = $sslKeyPath;
+
+        return $this;
+    }
 
     public function getMessages()
     {
@@ -342,6 +366,7 @@ class Config extends Singleton
 
     public function getAdvertising($seasonID)
     {
+        $output = [];
         for ($i = 0; $i < count($this->advertising['season_id']); $i++) {
             if (($this->advertising['season_id'][$i] == $seasonID) || ($this->advertising['season_id'][$i] == 0)) {
                 $output['season_id'][] = $this->advertising['season_id'][$i];
@@ -349,6 +374,7 @@ class Config extends Singleton
                 $output['message'][] = $this->advertising['message'][$i];
             }
         }
+
         return $output;
     }
 
@@ -374,9 +400,11 @@ class Config extends Singleton
 
     public function getWorkshopByMap($mapname)
     {
-        if (!empty($this->workshop[$mapname]))
+        if (!empty($this->workshop[$mapname])) {
             return $this->workshop[$mapname];
-        else return false;
+        } else {
+            return false;
+        }
     }
 
     public function setWorkshop($workshop)
@@ -502,5 +530,3 @@ class Config extends Singleton
     }
 
 }
-
-?>

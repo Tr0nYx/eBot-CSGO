@@ -9,8 +9,7 @@
 
 namespace eBot\Exception;
 
-class PluginException extends \Exception {
+class PluginException extends \Exception
+{
 
 }
-
-?>

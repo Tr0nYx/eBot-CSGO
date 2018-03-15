@@ -9,7 +9,8 @@
 
 namespace eTools\Task;
 
-interface Taskable {
+interface Taskable
+{
 
     public function taskExecute($name);
 }

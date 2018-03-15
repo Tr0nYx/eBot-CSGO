@@ -13,13 +13,16 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\RoundSpawn as Object;
 
-class RoundSpawn extends Message {
+class RoundSpawn extends Message
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('/^eBot triggered "Round_Spawn"/');
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
         $o->setTime(time());
 

@@ -11,7 +11,8 @@ namespace eTools\Task;
 
 use \eTools\Utils\Logger;
 
-class Task {
+class Task
+{
 
     const NOT_RUNNING = 0;
     const RUNNING = 1;
@@ -23,8 +24,9 @@ class Task {
     private $status;
     private $param = array();
 
-    public function __construct(&$obj, $functionName, $time) {
-        Logger::debug("Creating task for " . get_class($obj) . "::taskExecute($functionName) at $time");
+    public function __construct(&$obj, $functionName, $time)
+    {
+        Logger::debug("Creating task for ".get_class($obj)."::taskExecute($functionName) at $time");
         $this->obj = $obj;
         $this->functionName = $functionName;
         $this->time = $time;
@@ -36,7 +38,8 @@ class Task {
         }
     }
 
-    public function run() {
+    public function run()
+    {
         if ((microtime(true) > $this->time) && ($this->status == 0)) {
             $param = $this->param;
             array_unshift($param, $this->functionName);
@@ -46,27 +49,33 @@ class Task {
         }
     }
 
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
-    public function & getObjet() {
+    public function & getObjet()
+    {
         return $this->obj;
     }
 
-    public function getFunctionName() {
+    public function getFunctionName()
+    {
         return $this->functionName;
     }
 
-    public function getParam() {
+    public function getParam()
+    {
         return $this->param;
     }
 
-    public function isThisObject($obj) {
+    public function isThisObject($obj)
+    {
         return $obj == $this->obj;
     }
 
-    public function getTime() {
+    public function getTime()
+    {
         return $this->time;
     }
 

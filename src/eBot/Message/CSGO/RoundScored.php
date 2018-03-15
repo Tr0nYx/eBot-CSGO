@@ -13,13 +13,18 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\RoundScored as Object;
 
-class RoundScored extends Message {
+class RoundScored extends Message
+{
 
-    public function __construct() {
-        parent::__construct('/^Team "(?P<team>.*)" triggered "SFUI_Notice_(?P<team_win>Terrorists_Win|CTs_Win|Target_Bombed|Target_Saved|Bomb_Defused)/');
+    public function __construct()
+    {
+        parent::__construct(
+            '/^Team "(?P<team>.*)" triggered "SFUI_Notice_(?P<team_win>Terrorists_Win|CTs_Win|Target_Bombed|Target_Saved|Bomb_Defused)/'
+        );
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
         $o->setTeam($this->datas["team"]);
 

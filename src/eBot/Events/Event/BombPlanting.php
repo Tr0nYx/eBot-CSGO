@@ -10,15 +10,14 @@
 namespace eBot\Events\Event;
 
 use eBot\Events\Event;
- 
-class BombPlanting extends Event {
-	
-	protected $match;
-	protected $user_id;
-	protected $user_name;
-	protected $user_team;
-	protected $user_steamid;
-	
-}
 
-?>
+class BombPlanting extends Event
+{
+
+    protected $match;
+    protected $user_id;
+    protected $user_name;
+    protected $user_team;
+    protected $user_steamid;
+
+}

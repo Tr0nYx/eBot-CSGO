@@ -12,13 +12,16 @@ namespace eBot\Message\CSGO;
 use eBot\Message\Message;
 use eBot\Message\Type\RoundRestart as Object;
 
-class RoundRestart extends Message {
+class RoundRestart extends Message
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('!World triggered "Restart_Round_\((\d+)_(second|seconds)\)"!');
     }
 
-    public function process() {
+    public function process()
+    {
         $o = new Object();
 
         return $o;

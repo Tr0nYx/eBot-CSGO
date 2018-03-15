@@ -11,7 +11,8 @@ namespace eBot\Match;
 
 use eTools\Utils\Logger;
 
-class Score {
+class Score
+{
 
     private $typeScore = "normal";
     private $score1Side1 = 0;
@@ -20,8 +21,9 @@ class Score {
     private $score2Side2 = 0;
     private $id = 0;
 
-    public function __construct($scoreData) {
-        Logger::debug("Creating score " . $scoreData["id"]);
+    public function __construct($scoreData)
+    {
+        Logger::debug("Creating score ".$scoreData["id"]);
         $this->setTypeScore($scoreData["type_score"]);
         $this->setScore1Side1($scoreData["score1_side1"]);
         $this->setScore1Side2($scoreData["score1_side2"]);
@@ -30,55 +32,68 @@ class Score {
         $this->setId($scoreData["id"]);
     }
 
-    public function getTypeScore() {
+    public function getTypeScore()
+    {
         return $this->typeScore;
     }
 
-    public function setTypeScore($typeScore) {
+    public function setTypeScore($typeScore)
+    {
         $this->typeScore = $typeScore;
     }
 
-    public function getScore1Side1() {
+    public function getScore1Side1()
+    {
         return $this->score1Side1;
     }
 
-    public function setScore1Side1($score1Side1) {
+    public function setScore1Side1($score1Side1)
+    {
         $this->score1Side1 = $score1Side1;
     }
 
-    public function getScore1Side2() {
+    public function getScore1Side2()
+    {
         return $this->score1Side2;
     }
 
-    public function setScore1Side2($score1Side2) {
+    public function setScore1Side2($score1Side2)
+    {
         $this->score1Side2 = $score1Side2;
     }
 
-    public function getScore2Side1() {
+    public function getScore2Side1()
+    {
         return $this->score2Side1;
     }
 
-    public function setScore2Side1($score2Side1) {
+    public function setScore2Side1($score2Side1)
+    {
         $this->score2Side1 = $score2Side1;
     }
 
-    public function getScore2Side2() {
+    public function getScore2Side2()
+    {
         return $this->score2Side2;
     }
 
-    public function setScore2Side2($score2Side2) {
+    public function setScore2Side2($score2Side2)
+    {
         $this->score2Side2 = $score2Side2;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
     }
 
-    public function addScore($score_teamA, $score_teamB, $nbMaxRound) {
+    public function addScore($score_teamA, $score_teamB, $nbMaxRound)
+    {
         if ($this->getScore1Side1() + $this->getScore2Side1() < $nbMaxRound) {
             $this->score1Side1 += $score_teamA;
             $this->score2Side1 += $score_teamB;
@@ -86,12 +101,15 @@ class Score {
             $this->score1Side2 += $score_teamA;
             $this->score2Side2 += $score_teamB;
         }
-        
+
         $this->saveScore();
     }
 
-    public function saveScore() {
-        mysql_query("UPDATE maps_score SET score1_side1='" . $this->score1Side1 . "',score1_side2='" . $this->score1Side2 . "',score2_side1='" . $this->score2Side1 . "',score2_side2='" . $this->score2Side2 . "' WHERE id='" . $this->id . "' ");
+    public function saveScore()
+    {
+        mysqli_query(
+            "UPDATE maps_score SET score1_side1='".$this->score1Side1."',score1_side2='".$this->score1Side2."',score2_side1='".$this->score2Side1."',score2_side2='".$this->score2Side2."' WHERE id='".$this->id."' "
+        );
     }
 
 }

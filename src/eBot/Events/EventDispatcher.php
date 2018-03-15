@@ -13,9 +13,9 @@ namespace eBot\Events;
 use eTools\Utils\Singleton;
 use eTools\Utils\Logger;
 use eBot\Plugins\Plugin;
-use eBot\Events\Event;
 
-class EventDispatcher extends Singleton {
+class EventDispatcher extends Singleton
+{
 
     private $listeners = array();
 
@@ -26,7 +26,8 @@ class EventDispatcher extends Singleton {
     const EVENT_ROUNDSCORED = "eBot\Events\Event\RoundScored";
     const EVENT_MATCH_END = "eBot\Events\Event\MatchEnd";
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->listeners[self::EVENT_SAY] = array();
         $this->listeners[self::EVENT_BOMB_DEFUSING] = array();
         $this->listeners[self::EVENT_BOMB_PLANTING] = array();
@@ -44,29 +45,29 @@ class EventDispatcher extends Singleton {
         $this->listeners["KnifeEnd"] = array();*/
     }
 
-    public function addListener(Plugin $plugin, $name) {
+    public function addListener(Plugin $plugin, $name)
+    {
         if (!isset($this->listeners[$name])) {
             Logger::error("Event name $name doesn't exists");
+
             return;
         }
 
-        Logger::log("Add listener for " . get_class($plugin) . " to $name");
+        Logger::log("Add listener for ".get_class($plugin)." to $name");
         $this->listeners[$name][] = $plugin;
     }
 
-    public function dispatchEvent(Event $event) {
-        Logger::debug("Dispatching event " . get_class($event));
+    public function dispatchEvent(Event $event)
+    {
+        Logger::debug("Dispatching event ".get_class($event));
         if (@$this->listeners[get_class($event)]) {
             foreach ($this->listeners[get_class($event)] as $plugin) {
                 try {
                     $plugin->onEvent($event);
                 } catch (\Exception $ex) {
-                    Logger::error("Error while executing " . get_class($event) . " on " . get_class($plugin));
+                    Logger::error("Error while executing ".get_class($event)." on ".get_class($plugin));
                 }
             }
         }
     }
-
 }
-
-?>

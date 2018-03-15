@@ -11,10 +11,13 @@ namespace eTools\Application;
 
 use eTools\Utils\Singleton;
 
-abstract class AbstractApplication extends Singleton {
-    
+abstract class AbstractApplication extends Singleton
+{
+
     public abstract function run();
+
     public abstract function getName();
+
     public abstract function getVersion();
 }
 

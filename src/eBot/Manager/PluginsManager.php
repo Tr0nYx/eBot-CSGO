@@ -16,15 +16,17 @@ use eBot\Plugins\Plugin;
 use eBot\Exception\PluginException;
 use eBot\Events\EventDispatcher;
 
-class PluginsManager extends Singleton {
+class PluginsManager extends Singleton
+{
 
     private $plugins = array();
 
-    public function __construct() {
+    public function __construct()
+    {
         Logger::log("Loading plugins");
-        Logger::debug("Loading " . APP_ROOT . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "plugins.ini");
-        if (file_exists(APP_ROOT . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "plugins.ini")) {
-            $data = parse_ini_file(APP_ROOT . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "plugins.ini", true);
+        Logger::debug("Loading ".APP_ROOT.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."plugins.ini");
+        if (file_exists(APP_ROOT.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."plugins.ini")) {
+            $data = parse_ini_file(APP_ROOT.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."plugins.ini", true);
             foreach ($data as $k => $d) {
 
                 if (class_exists($k)) {
@@ -39,23 +41,27 @@ class PluginsManager extends Singleton {
                 }
             }
         } else {
-            Logger::error(APP_ROOT . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "plugins.ini doesn't exists");
+            Logger::error(APP_ROOT.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."plugins.ini doesn't exists");
         }
     }
 
-    public function createPlugin($name) {
+    public function createPlugin($name)
+    {
         $plugin = unserialize(
-                sprintf(
-                        'O:%d:"%s":0:{}', strlen($name), $name
-                )
+            sprintf(
+                'O:%d:"%s":0:{}',
+                strlen($name),
+                $name
+            )
         );
 
         return $plugin;
     }
 
-    public function init(Plugin $plugin, $data) {
+    public function init(Plugin $plugin, $data)
+    {
         try {
-            Logger::log("Adding plugin " . get_class($plugin));
+            Logger::log("Adding plugin ".get_class($plugin));
             Logger::debug("Calling init");
             $plugin->init($data);
             $this->plugins[get_class($plugin)] = $plugin;
@@ -64,10 +70,11 @@ class PluginsManager extends Singleton {
         }
     }
 
-    public function startAll() {
+    public function startAll()
+    {
         foreach ($this->plugins as $plugin) {
             try {
-                Logger::debug("Starting plugin " . get_class($plugin));
+                Logger::debug("Starting plugin ".get_class($plugin));
                 $plugin->onStart();
 
                 Logger::debug("Attaching event");
@@ -82,25 +89,25 @@ class PluginsManager extends Singleton {
                     Logger::error("Event list is not an array");
                 }
             } catch (\Exception $ex) {
-                Logger::error("Error while starting " . get_class($plugin));
+                Logger::error("Error while starting ".get_class($plugin));
             }
         }
 
-        if (count($this->plugins) > 0)
+        if (count($this->plugins) > 0) {
             Logger::log("Plugins started");
+        }
     }
 
-    public function stopAll() {
+    public function stopAll()
+    {
         foreach ($this->plugins as $plugin) {
             try {
-                Logger::debug("Starting plugin " . get_class($plugin));
+                Logger::debug("Starting plugin ".get_class($plugin));
                 $plugin->stop();
             } catch (\Exception $ex) {
-                Logger::error("Error while starting " . get_class($plugin));
+                Logger::error("Error while starting ".get_class($plugin));
             }
         }
     }
 
 }
-
-?>

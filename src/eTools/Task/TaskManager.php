@@ -13,11 +13,13 @@ use \eTools\Utils\Singleton;
 use \eTools\Task\Task;
 use \eTools\Utils\Logger;
 
-class TaskManager extends Singleton {
+class TaskManager extends Singleton
+{
 
     private $tasklist = array();
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->tasklist = array();
     }
 
@@ -26,9 +28,10 @@ class TaskManager extends Singleton {
      * @param Task $task
      * @param boolean $uniq
      */
-    public function addTask(&$task, $uniq = false) {
+    public function addTask(&$task, $uniq = false)
+    {
         if (get_class($task) == "eTools\Task\Task") {
-            Logger::debug("Try adding task for " . get_class($task->getObjet()));
+            Logger::debug("Try adding task for ".get_class($task->getObjet()));
             $ok = true;
 
             if ($uniq) {
@@ -55,7 +58,7 @@ class TaskManager extends Singleton {
             }
 
             if ($ok) {
-                Logger::debug("Added task " . get_class($task->getObjet()));
+                Logger::debug("Added task ".get_class($task->getObjet()));
                 array_push($this->tasklist, $task);
             }
         }
@@ -63,7 +66,8 @@ class TaskManager extends Singleton {
 
     private $nbTask = 0;
 
-    public function runTask() {
+    public function runTask()
+    {
         foreach ($this->tasklist as $k => &$v) {
             if ($v->getStatus() == Task::NOT_RUNNING) {
                 $v->run();
@@ -75,7 +79,8 @@ class TaskManager extends Singleton {
         }
     }
 
-    public function removeAllTaskForObject(&$obj) {
+    public function removeAllTaskForObject(&$obj)
+    {
         foreach ($this->tasklist as $k => &$v) {
             if ($v->isThisObject($obj) || ($v->getObjet() == $obj)) {
                 unset($this->tasklist[$k]);
