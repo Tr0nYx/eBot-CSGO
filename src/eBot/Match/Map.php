@@ -2,10 +2,11 @@
 
 /**
  * eBot - A bot for match management for CS:GO
- * @license     http://creativecommons.org/licenses/by/3.0/ Creative Commons 3.0
- * @author      Julien Pardons <julien.pardons@esport-tools.net>
- * @version     3.0
- * @date        21/10/2012
+ *
+ * @license http://creativecommons.org/licenses/by/3.0/ Creative Commons 3.0
+ * @author  Julien Pardons <julien.pardons@esport-tools.net>
+ * @version 3.0
+ * @date    21/10/2012
  */
 
 namespace eBot\Match;
@@ -186,34 +187,34 @@ class Map
     public function getStatusText()
     {
         switch ($this->getStatus()) {
-            case self::STATUS_NOT_STARTED:
-                return "Not started";
-            case self::STATUS_STARTING:
-                return "Starting";
-            case self::STATUS_WU_KNIFE:
-                return "Warmup Knife";
-            case self::STATUS_KNIFE:
-                return "Knife Round";
-            case self::STATUS_END_KNIFE:
-                return "Waiting choose team - Knife Round";
-            case self::STATUS_WU_1_SIDE:
-                return "Warmup first side";
-            case self::STATUS_FIRST_SIDE:
-                return "First side - Round #".$this->getNbRound();
-            case self::STATUS_WU_2_SIDE:
-                return "Warmup second side";
-            case self::STATUS_SECOND_SIDE:
-                return "Second side - Round #".$this->getNbRound();
-            case self::STATUS_WU_OT_1_SIDE:
-                return "Warmup first side OverTime";
-            case self::STATUS_OT_FIRST_SIDE:
-                return "First side OverTime - Round #".$this->getNbRound();
-            case self::STATUS_WU_OT_2_SIDE:
-                return "Warmup second side OverTime";
-            case self::STATUS_OT_SECOND_SIDE:
-                return "Second side OverTime - Round #".$this->getNbRound();
-            case self::STATUS_MAP_ENDED:
-                return "Finished";
+        case self::STATUS_NOT_STARTED:
+            return "Not started";
+        case self::STATUS_STARTING:
+            return "Starting";
+        case self::STATUS_WU_KNIFE:
+            return "Warmup Knife";
+        case self::STATUS_KNIFE:
+            return "Knife Round";
+        case self::STATUS_END_KNIFE:
+            return "Waiting choose team - Knife Round";
+        case self::STATUS_WU_1_SIDE:
+            return "Warmup first side";
+        case self::STATUS_FIRST_SIDE:
+            return "First side - Round #".$this->getNbRound();
+        case self::STATUS_WU_2_SIDE:
+            return "Warmup second side";
+        case self::STATUS_SECOND_SIDE:
+            return "Second side - Round #".$this->getNbRound();
+        case self::STATUS_WU_OT_1_SIDE:
+            return "Warmup first side OverTime";
+        case self::STATUS_OT_FIRST_SIDE:
+            return "First side OverTime - Round #".$this->getNbRound();
+        case self::STATUS_WU_OT_2_SIDE:
+            return "Warmup second side OverTime";
+        case self::STATUS_OT_SECOND_SIDE:
+            return "Second side OverTime - Round #".$this->getNbRound();
+        case self::STATUS_MAP_ENDED:
+            return "Finished";
         }
     }
 

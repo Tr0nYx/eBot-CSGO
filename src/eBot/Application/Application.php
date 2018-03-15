@@ -2,10 +2,11 @@
 
 /**
  * eBot - A bot for match management for CS:GO
- * @license     http://creativecommons.org/licenses/by/3.0/ Creative Commons 3.0
- * @author      Julien Pardons <julien.pardons@esport-tools.net>
- * @version     3.0
- * @date        21/10/2012
+ *
+ * @license http://creativecommons.org/licenses/by/3.0/ Creative Commons 3.0
+ * @author  Julien Pardons <julien.pardons@esport-tools.net>
+ * @version 3.0
+ * @date    21/10/2012
  */
 
 namespace eBot\Application;
@@ -68,23 +69,28 @@ class Application extends AbstractApplication
 
         try {
             $this->websocket['match'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance()->getBotPort())."/match"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".
+                (\eBot\Config\Config::getInstance()->getBotPort())."/match"
             );
             $this->websocket['match']->open();
             $this->websocket['rcon'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance()->getBotPort())."/rcon"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".
+                (\eBot\Config\Config::getInstance()->getBotPort())."/rcon"
             );
             $this->websocket['rcon']->open();
             $this->websocket['logger'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance()->getBotPort())."/logger"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".
+                (\eBot\Config\Config::getInstance()->getBotPort())."/logger"
             );
             $this->websocket['logger']->open();
             $this->websocket['livemap'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance()->getBotPort())."/livemap"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".
+                (\eBot\Config\Config::getInstance()->getBotPort())."/livemap"
             );
             $this->websocket['livemap']->open();
             $this->websocket['aliveCheck'] = new \WebSocket(
-                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".(\eBot\Config\Config::getInstance()->getBotPort())."/alive"
+                "ws://".\eBot\Config\Config::getInstance()->getBotIp().":".
+                (\eBot\Config\Config::getInstance()->getBotPort())."/alive"
             );
             $this->websocket['aliveCheck']->open();
         } catch (\Exception $ex) {
@@ -154,7 +160,8 @@ class Application extends AbstractApplication
                                 "!^(?<id>\d+) executeCommand (?<ip>\d+\.\d+\.\d+\.\d+\:\d+) (?<command>.*)$!",
                                 $text,
                                 $preg
-                            )) {
+                            )
+                            ) {
                                 $match = MatchManager::getInstance()->getMatch($preg["ip"]);
                                 if ($match) {
                                     $reply = $match->adminExecuteCommand($preg["command"]);
@@ -169,7 +176,8 @@ class Application extends AbstractApplication
                                 "!^(?<id>\d+) passknife (?<ip>\d+\.\d+\.\d+\.\d+\:\d+)$!",
                                 $text,
                                 $preg
-                            )) {
+                            )
+                            ) {
                                 $match = MatchManager::getInstance()->getMatch($preg["ip"]);
                                 if ($match) {
                                     $reply = $match->adminPassKnife();
@@ -190,7 +198,8 @@ class Application extends AbstractApplication
                                 "!^(?<id>\d+) forceknife (?<ip>\d+\.\d+\.\d+\.\d+\:\d+)$!",
                                 $text,
                                 $preg
-                            )) {
+                            )
+                            ) {
                                 $match = MatchManager::getInstance()->getMatch($preg["ip"]);
                                 if ($match) {
                                     $reply = $match->adminForceKnife();
@@ -211,7 +220,8 @@ class Application extends AbstractApplication
                                 "!^(?<id>\d+) forceknifeend (?<ip>\d+\.\d+\.\d+\.\d+\:\d+)$!",
                                 $text,
                                 $preg
-                            )) {
+                            )
+                            ) {
                                 $match = MatchManager::getInstance()->getMatch($preg["ip"]);
                                 if ($match) {
                                     $reply = $match->adminForceKnifeEnd();
@@ -232,7 +242,8 @@ class Application extends AbstractApplication
                                 "!^(?<id>\d+) forcestart (?<ip>\d+\.\d+\.\d+\.\d+\:\d+)$!",
                                 $text,
                                 $preg
-                            )) {
+                            )
+                            ) {
                                 $match = MatchManager::getInstance()->getMatch($preg["ip"]);
                                 if ($match) {
                                     $reply = $match->adminForceStart();
@@ -253,7 +264,8 @@ class Application extends AbstractApplication
                                 "!^(?<id>\d+) stopback (?<ip>\d+\.\d+\.\d+\.\d+\:\d+)$!",
                                 $text,
                                 $preg
-                            )) {
+                            )
+                            ) {
                                 $match = MatchManager::getInstance()->getMatch($preg["ip"]);
                                 if ($match) {
                                     $reply = $match->adminStopBack();
@@ -274,7 +286,8 @@ class Application extends AbstractApplication
                                 "!^(?<id>\d+) pauseunpause (?<ip>\d+\.\d+\.\d+\.\d+\:\d+)$!",
                                 $text,
                                 $preg
-                            )) {
+                            )
+                            ) {
                                 $match = MatchManager::getInstance()->getMatch($preg["ip"]);
                                 if ($match) {
                                     $reply = $match->adminPauseUnpause();
@@ -295,7 +308,8 @@ class Application extends AbstractApplication
                                 "!^(?<id>\d+) fixsides (?<ip>\d+\.\d+\.\d+\.\d+\:\d+)$!",
                                 $text,
                                 $preg
-                            )) {
+                            )
+                            ) {
                                 $match = MatchManager::getInstance()->getMatch($preg["ip"]);
                                 if ($match) {
                                     $reply = $match->adminFixSides();
@@ -316,7 +330,8 @@ class Application extends AbstractApplication
                                 "!^(?<id>\d+) streamerready (?<ip>\d+\.\d+\.\d+\.\d+\:\d+)$!",
                                 $text,
                                 $preg
-                            )) {
+                            )
+                            ) {
                                 $match = MatchManager::getInstance()->getMatch($preg["ip"]);
                                 if ($match) {
                                     $reply = $match->adminStreamerReady();
@@ -337,7 +352,8 @@ class Application extends AbstractApplication
                                 "!^(?<id>\d+) goBackRounds (?<ip>\d+\.\d+\.\d+\.\d+\:\d+) (?<round>\d+)$!",
                                 $text,
                                 $preg
-                            )) {
+                            )
+                            ) {
                                 $match = MatchManager::getInstance()->getMatch($preg["ip"]);
                                 if ($match) {
                                     $reply = $match->adminGoBackRounds($preg['round']);
@@ -358,7 +374,8 @@ class Application extends AbstractApplication
                                 "!^(?<id>\d+) skipmap (?<ip>\d+\.\d+\.\d+\.\d+\:\d+)$!",
                                 $text,
                                 $preg
-                            )) {
+                            )
+                            ) {
                                 $match = MatchManager::getInstance()->getMatch($preg["ip"]);
                                 if ($match) {
                                     $reply = $match->adminSkipMap();
@@ -430,7 +447,8 @@ class Application extends AbstractApplication
         );
         if (!$conn) {
             Logger::error(
-                "Can't login into database ".Config::getInstance()->getMysqlUser()."@".Config::getInstance()->getMysqlIp()
+                "Can't login into database ".Config::getInstance()->getMysqlUser().
+                "@".Config::getInstance()->getMysqlIp()
             );
             die(1);
         }

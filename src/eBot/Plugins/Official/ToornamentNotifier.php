@@ -2,10 +2,11 @@
 
 /**
  * eBot - A bot for match management for CS:GO
- * @license     http://creativecommons.org/licenses/by/3.0/ Creative Commons 3.0
- * @author      Julien Pardons <julien.pardons@esport-tools.net>
- * @version     3.0
- * @date        21/10/2012
+ *
+ * @license http://creativecommons.org/licenses/by/3.0/ Creative Commons 3.0
+ * @author  Julien Pardons <julien.pardons@esport-tools.net>
+ * @version 3.0
+ * @date    21/10/2012
  */
 
 namespace eBot\Plugins\Official;
@@ -41,22 +42,22 @@ class ToornamentNotifier implements Plugin
     public function onEvent($event)
     {
         switch (get_class($event)) {
-            case \eBot\Events\EventDispatcher::EVENT_ROUNDSCORED:
-                if ($event->getMatch()->getIdentifier()) {
-                    $url = str_replace("{MATCH_ID}", $event->getMatch()->getIdentifier(), $this->url);
-                    $opts = array(
-                        'http' => array(
-                            'method' => "GET",
-                            'header' => "Connection: Close\r\n".
-                                "X-Plugin-Key: ".$this->key,
-                        ),
-                    );
+        case \eBot\Events\EventDispatcher::EVENT_ROUNDSCORED:
+            if ($event->getMatch()->getIdentifier()) {
+                $url = str_replace("{MATCH_ID}", $event->getMatch()->getIdentifier(), $this->url);
+                $opts = array(
+                    'http' => array(
+                        'method' => "GET",
+                        'header' => "Connection: Close\r\n".
+                            "X-Plugin-Key: ".$this->key,
+                    ),
+                );
 
-                    $context = stream_context_create($opts);
-                    Logger::log($event->getMatch()->getId()." - Perf $url");
-                    file_get_contents($url, false, $context);
-                }
-                break;
+                $context = stream_context_create($opts);
+                Logger::log($event->getMatch()->getId()." - Perf $url");
+                file_get_contents($url, false, $context);
+            }
+            break;
         }
     }
 

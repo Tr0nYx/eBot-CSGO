@@ -6,6 +6,7 @@ use eBot\Events\Event;
 
 /**
  * Class MatchStart
+ *
  * @package eBot\Events\Event
  */
 class MatchStart extends Event

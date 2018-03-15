@@ -72,21 +72,21 @@ class ReportManager extends Singleton implements Taskable
         }
 
         switch ($format) {
-            case 'json':
-                $r = json_decode($res);
-                if ($r === null) {
-                    throw new \Exception("failed to decode $res as json");
-                }
+        case 'json':
+            $r = json_decode($res);
+            if ($r === null) {
+                throw new \Exception("failed to decode $res as json");
+            }
 
-                return $r;
+            return $r;
 
-            case 'xml':
-                $r = simplexml_load_string($res);
-                if ($r === null) {
-                    throw new \Exception("failed to decode $res as xml");
-                }
+        case 'xml':
+            $r = simplexml_load_string($res);
+            if ($r === null) {
+                throw new \Exception("failed to decode $res as xml");
+            }
 
-                return $r;
+            return $r;
         }
 
         return $res;

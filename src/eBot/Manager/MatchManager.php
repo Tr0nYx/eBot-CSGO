@@ -85,7 +85,7 @@ class MatchManager extends Singleton implements Taskable
                     if ($ex->getMessage() == "SERVER_BUSY") {
                         Logger::error(
                             $req["server_ip"]." is busy for ".($this->busyServers[$req['server_ip']] - time(
-                                )." seconds")
+                            )." seconds")
                         );
                     } elseif ($ex->getMessage() == "MATCH_ALREADY_PLAY_ON_THIS_SERVER") {
                         Logger::error("A match is already playing on ".$req["server_ip"]);
@@ -175,7 +175,7 @@ class MatchManager extends Singleton implements Taskable
     private function getTeamDetails($id, $t, $data)
     {
         if (is_numeric($id) && $id > 0) {
-            $ds = mysqli_fetch_array(mysqli_query(null,"SELECT * FROM `teams` WHERE `id` = '".$id."'"));
+            $ds = mysqli_fetch_array(mysqli_query(null, "SELECT * FROM `teams` WHERE `id` = '".$id."'"));
 
             return $ds;
         } else {
