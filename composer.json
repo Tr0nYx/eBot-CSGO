@@ -19,7 +19,6 @@
         "squizlabs/php_codesniffer": "~2.5",
         "phpmd/phpmd": "~2.3",
         "sebastian/phpcpd": "~2.0",
-        "satooshi/php-coveralls": "dev-master",
         "phpbench/phpbench": "~0.12.0"
     },
     "autoload": {
