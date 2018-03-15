@@ -327,12 +327,12 @@ class Config extends Singleton
         $this->delay_busy_server = $delay_busy_server;
     }
 
-    public function getNb_max_matchs()
+    public function getNbMaxMatchs()
     {
         return $this->nb_max_matchs;
     }
 
-    public function setNb_max_matchs($nb_max_matchs)
+    public function setNbMaxMatchs($nb_max_matchs)
     {
         $this->nb_max_matchs = $nb_max_matchs;
     }

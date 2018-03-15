@@ -29,7 +29,6 @@ class PluginsManager extends Singleton
         if (file_exists(APP_ROOT.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."plugins.ini")) {
             $data = parse_ini_file(APP_ROOT.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."plugins.ini", true);
             foreach ($data as $k => $d) {
-
                 if (class_exists($k)) {
                     $plugin = $this->createPlugin($k);
                     if ($plugin instanceof Plugin) {

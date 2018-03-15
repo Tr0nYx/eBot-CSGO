@@ -21,7 +21,9 @@ class SwitchTeam extends Message
     {
         // "Opie<11><BOT>" switched from team <CT> to <TERRORIST>
         parent::__construct(
-            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>]" switched from team [<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>] to [<](?P<new_team>CT|TERRORIST|Unassigned|Spectator)[>]/'
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>]" switched from team '.
+            '[<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>] to '.
+            '[<](?P<new_team>CT|TERRORIST|Unassigned|Spectator)[>]/'
         );
     }
 

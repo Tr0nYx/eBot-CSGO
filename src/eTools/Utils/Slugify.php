@@ -40,7 +40,4 @@ class Slugify
 
         return strtolower($mycontent);
     }
-
 }
-
-?>

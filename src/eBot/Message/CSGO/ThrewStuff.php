@@ -20,7 +20,10 @@ class ThrewStuff extends Message
     public function __construct()
     {
         parent::__construct(
-            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" threw (?P<stuff>hegrenade|flashbang|smokegrenade|decoy|molotov) \[(?P<pos_x>[\-]?[0-9]+) (?P<pos_y>[\-]?[0-9]+) (?P<pos_z>[\-]?[0-9]+)\]/'
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>]'.
+            '[<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" threw '.
+            '(?P<stuff>hegrenade|flashbang|smokegrenade|decoy|molotov) \[(?P<pos_x>[\-]?[0-9]+) '.
+            '(?P<pos_y>[\-]?[0-9]+) (?P<pos_z>[\-]?[0-9]+)\]/'
         );
     }
 

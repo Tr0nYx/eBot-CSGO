@@ -15,11 +15,9 @@ use eTools\Utils\Singleton;
 abstract class AbstractApplication extends Singleton
 {
 
-    public abstract function run();
+    abstract public function run();
 
-    public abstract function getName();
+    abstract public function getName();
 
-    public abstract function getVersion();
+    abstract public function getVersion();
 }
-
-?>

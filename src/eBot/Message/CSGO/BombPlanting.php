@@ -19,7 +19,8 @@ class BombPlanting extends Message
     public function __construct()
     {
         parent::__construct(
-            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" triggered "Planted_The_Bomb"/'
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)'.
+            '[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" triggered "Planted_The_Bomb"/'
         );
     }
 

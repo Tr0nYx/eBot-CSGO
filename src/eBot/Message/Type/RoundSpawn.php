@@ -38,5 +38,4 @@ class RoundSpawn extends Type
     {
         $this->time = $time;
     }
-
 }

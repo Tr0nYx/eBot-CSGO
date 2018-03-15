@@ -20,7 +20,7 @@ abstract class Message
         $this->regex = $regex;
     }
 
-    function match($data)
+    public function match($data)
     {
         if (preg_match($this->regex, $data, $match)) {
             $this->datas = $match;
@@ -31,5 +31,5 @@ abstract class Message
         return false;
     }
 
-    abstract function process();
+    abstract public function process();
 }

@@ -85,7 +85,6 @@ class Logger extends Singleton
 
     public static function logToHtmlFile($content, $file, $onlyAdmin)
     {
-
     }
 
     public static function log($content)
@@ -180,7 +179,4 @@ class Logger extends Singleton
     {
         $this->name = $name;
     }
-
 }
-
-?>

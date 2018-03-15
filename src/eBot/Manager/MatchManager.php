@@ -60,12 +60,43 @@ class MatchManager extends Singleton implements Taskable
         Logger::debug("Checking for new match (current matchs: ".count($this->matchs).")");
 
         $sql = mysqli_query(
-            "SELECT m.team_a_name as team_a_name, m.team_b_name as team_b_name, m.id as match_id, m.config_authkey as config_authkey, t_a.name as team_a, t_b.name as team_b, s.id as server_id, s.ip as server_ip, s.rcon as server_rcon FROM `matchs` m LEFT JOIN `servers` s ON s.id = m.server_id LEFT JOIN `teams` t_a ON t_a.id = m.team_a LEFT JOIN `teams` t_b ON t_b.id = m.team_b WHERE m.`auto_start` = '1' AND UNIX_TIMESTAMP(m.`startdate`) <= (m.`auto_start_time`*60)+".time(
-            )." AND UNIX_TIMESTAMP(m.`startdate`) > ".time()
+            "SELECT
+            m.team_a_name as team_a_name,
+            m.team_b_name as team_b_name,
+            m.id as match_id,
+            m.config_authkey as config_authkey,
+            t_a.name as team_a,
+            t_b.name as team_b,
+            s.id as server_id,
+            s.ip as server_ip,
+            s.rcon as server_rcon
+            FROM `matchs` m
+            LEFT JOIN `servers` s ON s.id = m.server_id
+            LEFT JOIN `teams` t_a ON t_a.id = m.team_a
+            LEFT JOIN `teams` t_b ON t_b.id = m.team_b
+            WHERE m.`auto_start` = '1'
+            AND UNIX_TIMESTAMP(m.`startdate`) <= (m.`auto_start_time`*60)+".time()."
+            AND UNIX_TIMESTAMP(m.`startdate`) > ".time()
         ) or die(mysqli_error());
         if (mysqli_num_rows($sql)) {
             $sql = mysqli_query(
-                "SELECT m.team_a_name as team_a_name, m.team_b_name as team_b_name, m.id as match_id, m.config_authkey as config_authkey, t_a.name as team_a, t_b.name as team_b, s.id as server_id, s.ip as server_ip, s.rcon as server_rcon FROM `matchs` m LEFT JOIN `servers` s ON s.id = m.server_id LEFT JOIN `teams` t_a ON t_a.id = m.team_a LEFT JOIN `teams` t_b ON t_b.id = m.team_b WHERE m.`status` >= ".Match::STATUS_STARTING." AND m.`status` < ".Match::STATUS_END_MATCH." AND m.`enable` = 1"
+                "SELECT
+                m.team_a_name as team_a_name,
+                m.team_b_name as team_b_name,
+                m.id as match_id,
+                m.config_authkey as config_authkey,
+                t_a.name as team_a,
+                t_b.name as team_b,
+                s.id as server_id,
+                s.ip as server_ip,
+                s.rcon as server_rcon
+                FROM `matchs` m
+                LEFT JOIN `servers` s ON s.id = m.server_id
+                LEFT JOIN `teams` t_a ON t_a.id = m.team_a
+                LEFT JOIN `teams` t_b ON t_b.id = m.team_b
+                WHERE m.`status` >= ".Match::STATUS_STARTING."
+                AND m.`status` < ".Match::STATUS_END_MATCH."
+                AND m.`enable` = 1"
             ) or die(mysqli_error());
         }
         while ($req = mysqli_fetch_assoc($sql)) {
@@ -74,7 +105,6 @@ class MatchManager extends Singleton implements Taskable
                     $teamA = $this->getTeamDetails($req['team_a'], 'a', $req);
                     $teamB = $this->getTeamDetails($req['team_a'], 'b', $req);
                     Logger::log("New match detected - ".$teamA['name']." vs ".$teamB['name']." on ".$req['server_ip']);
-                    //mysqli_query("UPDATE `matchs` SET `enable` = 1, `status` = " . Match::STATUS_STARTING . " WHERE `id` = " . $req["match_id"] . "");
                     $this->newMatch($req["match_id"], $req['server_ip'], $req['server_rcon'], $req['config_authkey']);
                 } catch (MatchException $ex) {
                     Logger::error("Error while creating the match");

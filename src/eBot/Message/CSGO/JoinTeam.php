@@ -19,7 +19,9 @@ class JoinTeam extends Message
     public function __construct()
     {
         parent::__construct(
-            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" joined team "(?P<join_team>CT|TERRORIST|Unassigned|Spectator)"/'
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<]'.
+            '(?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" joined team '.
+            '"(?P<join_team>CT|TERRORIST|Unassigned|Spectator)"/'
         );
     }
 

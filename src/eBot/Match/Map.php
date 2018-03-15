@@ -59,7 +59,8 @@ class Map
         $this->setTvRecordFile($mapData['tv_record_file']);
 
         Logger::log(
-            "Maps loaded ".$this->getMapName()." (score: ".$this->getScore1()." - ".$this->getScore2().") - Current left side: ".$this->getCurrentSide()." - Current status: ".$this->getStatusText()
+            "Maps loaded ".$this->getMapName()." (score: ".$this->getScore1()." - ".$this->getScore2().") ".
+            "- Current left side: ".$this->getCurrentSide()." - Current status: ".$this->getStatusText()
         );
 
         $query = mysqli_query("SELECT * FROM maps_score WHERE map_id = '".$this->map_id."' ORDER BY created_at DESC");
@@ -69,7 +70,16 @@ class Map
 
         if (count($this->scores) == 0) {
             mysqli_query(
-                "INSERT INTO maps_score (`map_id`,`type_score`,`score1_side1`,`score1_side2`,`score2_side1`,`score2_side2`, `created_at`,`updated_at`) VALUES ('".$mapData["id"]."', 'normal',0,0,0,0, NOW(), NOW())"
+                "INSERT INTO maps_score
+                (`map_id`,
+                `type_score`,
+                `score1_side1`,
+                `score1_side2`,
+                `score2_side1`,
+                `score2_side2`,
+                `created_at`,
+                `updated_at`)
+                VALUES ('".$mapData["id"]."', 'normal',0,0,0,0, NOW(), NOW())"
             );
             $r = mysqli_fetch_array(mysqli_query("SELECT * FROM maps_score WHERE id='".mysqli_insert_id()."'"));
 
@@ -112,7 +122,9 @@ class Map
         $this->score2 += $score_teamB;
 
         mysqli_query(
-            "UPDATE `maps` SET score_1 = '".$this->score1."', score_2 = '".$this->score2."' WHERE id='".$this->map_id."'"
+            "UPDATE `maps`
+            SET score_1 = '".$this->score1."', score_2 = '".$this->score2."'
+            WHERE id='".$this->map_id."'"
         );
 
         return $team;
@@ -167,16 +179,26 @@ class Map
         $this->setScore1($a);
         $this->setScore2($b);
         mysqli_query(
-            "UPDATE `maps` SET score_1 = '".$this->score1."', score_2 = '".$this->score2."' WHERE id='".$this->map_id."'"
+            "UPDATE `maps`
+            SET score_1 = '".$this->score1."', score_2 = '".$this->score2."'
+            WHERE id='".$this->map_id."'"
         );
     }
 
     public function addOvertime()
     {
         mysqli_query(
-            "INSERT INTO maps_score (`map_id`,`type_score`,`score1_side1`,`score1_side2`,`score2_side1`,`score2_side2`, `created_at`,`updated_at`) VALUES ('".$this->map_id."', 'ot',0,0,0,0, NOW(), NOW())"
+            "INSERT INTO maps_score (
+            `map_id`,
+            `type_score`,
+            `score1_side1`,
+            `score1_side2`,
+            `score2_side1`,
+            `score2_side2`,
+            `created_at`,
+            `updated_at`) VALUES ('".$this->map_id."', 'ot',0,0,0,0, NOW(), NOW())"
         );
-        $r = mysqli_fetch_array(mysqli_query("SELECT * FROM maps_score WHERE id='".\mysql_insert_id()."'"));
+        $r = mysqli_fetch_array(mysqli_query("SELECT * FROM maps_score WHERE id='".mysqli_insert_id()."'"));
 
         $this->scores[] = new Score($r);
 
@@ -187,34 +209,34 @@ class Map
     public function getStatusText()
     {
         switch ($this->getStatus()) {
-        case self::STATUS_NOT_STARTED:
-            return "Not started";
-        case self::STATUS_STARTING:
-            return "Starting";
-        case self::STATUS_WU_KNIFE:
-            return "Warmup Knife";
-        case self::STATUS_KNIFE:
-            return "Knife Round";
-        case self::STATUS_END_KNIFE:
-            return "Waiting choose team - Knife Round";
-        case self::STATUS_WU_1_SIDE:
-            return "Warmup first side";
-        case self::STATUS_FIRST_SIDE:
-            return "First side - Round #".$this->getNbRound();
-        case self::STATUS_WU_2_SIDE:
-            return "Warmup second side";
-        case self::STATUS_SECOND_SIDE:
-            return "Second side - Round #".$this->getNbRound();
-        case self::STATUS_WU_OT_1_SIDE:
-            return "Warmup first side OverTime";
-        case self::STATUS_OT_FIRST_SIDE:
-            return "First side OverTime - Round #".$this->getNbRound();
-        case self::STATUS_WU_OT_2_SIDE:
-            return "Warmup second side OverTime";
-        case self::STATUS_OT_SECOND_SIDE:
-            return "Second side OverTime - Round #".$this->getNbRound();
-        case self::STATUS_MAP_ENDED:
-            return "Finished";
+            case self::STATUS_NOT_STARTED:
+                return "Not started";
+            case self::STATUS_STARTING:
+                return "Starting";
+            case self::STATUS_WU_KNIFE:
+                return "Warmup Knife";
+            case self::STATUS_KNIFE:
+                return "Knife Round";
+            case self::STATUS_END_KNIFE:
+                return "Waiting choose team - Knife Round";
+            case self::STATUS_WU_1_SIDE:
+                return "Warmup first side";
+            case self::STATUS_FIRST_SIDE:
+                return "First side - Round #".$this->getNbRound();
+            case self::STATUS_WU_2_SIDE:
+                return "Warmup second side";
+            case self::STATUS_SECOND_SIDE:
+                return "Second side - Round #".$this->getNbRound();
+            case self::STATUS_WU_OT_1_SIDE:
+                return "Warmup first side OverTime";
+            case self::STATUS_OT_FIRST_SIDE:
+                return "First side OverTime - Round #".$this->getNbRound();
+            case self::STATUS_WU_OT_2_SIDE:
+                return "Warmup second side OverTime";
+            case self::STATUS_OT_SECOND_SIDE:
+                return "Second side OverTime - Round #".$this->getNbRound();
+            case self::STATUS_MAP_ENDED:
+                return "Finished";
         }
     }
 

@@ -19,7 +19,9 @@ class BombDefusing extends Message
     public function __construct()
     {
         parent::__construct(
-            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" triggered "(Begin_Bomb_Defuse_With_Kit|Begin_Bomb_Defuse_Without_Kit)"/'
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<]'.
+            '(?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" triggered '.
+            '"(Begin_Bomb_Defuse_With_Kit|Begin_Bomb_Defuse_Without_Kit)"/'
         );
     }
 

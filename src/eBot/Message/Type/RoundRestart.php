@@ -18,5 +18,4 @@ class RoundRestart extends Type
     {
         $this->setName("RoundRestart");
     }
-
 }

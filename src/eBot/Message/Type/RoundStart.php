@@ -38,5 +38,4 @@ class RoundStart extends Type
     {
         $this->time = $time;
     }
-
 }

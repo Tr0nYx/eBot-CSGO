@@ -32,7 +32,6 @@ class MatchManagerServer extends Singleton implements Taskable
     public function sendPub()
     {
         foreach ($this->matchs as $k => $match) {
-
         }
     }
 
@@ -51,7 +50,21 @@ class MatchManagerServer extends Singleton implements Taskable
         Logger::debug("Checking for new match (current matchs: ".count($this->matchs).")");
 
         $sql = mysqli_query(
-            "SELECT m.team_a_name as team_a_name, m.team_b_name as team_b_name, m.id as match_id, m.config_authkey as config_authkey, t_a.name as team_a, t_b.name as team_b, s.id as server_id, s.ip as server_ip, s.rcon as server_rcon FROM `matchs` m LEFT JOIN `servers` s ON s.id = m.server_id LEFT JOIN `teams` t_a ON t_a.id = m.team_a LEFT JOIN `teams` t_b ON t_b.id = m.team_b WHERE m.`status` >= ".Match::STATUS_STARTING." AND m.`status` < ".Match::STATUS_END_MATCH." AND m.`enable` = 1"
+            "SELECT m.team_a_name as team_a_name,
+              m.team_b_name as team_b_name,
+              m.id as match_id,
+              m.config_authkey as config_authkey,
+              t_a.name as team_a,
+              t_b.name as team_b,
+              s.id as server_id,
+              s.ip as server_ip,
+              s.rcon as server_rcon
+              FROM `matchs` m
+              LEFT JOIN `servers` s ON s.id = m.server_id
+              LEFT JOIN `teams` t_a ON t_a.id = m.team_a
+              LEFT JOIN `teams` t_b ON t_b.id = m.team_b
+              WHERE m.`status` >= ".Match::STATUS_STARTING."
+              AND m.`status` < ".Match::STATUS_END_MATCH." AND m.`enable` = 1"
         ) or die(mysqli_error());
         while ($req = mysqli_fetch_assoc($sql)) {
             if (!@$this->matchs[$req['server_ip']]) {
@@ -62,7 +75,8 @@ class MatchManagerServer extends Singleton implements Taskable
                     $this->newMatch($req["match_id"], $req['server_ip'], $req['server_rcon'], $req['config_authkey']);
                 } catch (MatchException $ex) {
                     Logger::error("Error while creating the match");
-                    mysqli_query("UPDATE `matchs` SET enable=0 WHERE id = '".$req['match_id']."'") or die(mysql_error());
+                    mysqli_query(null, "UPDATE `matchs` SET enable=0 WHERE id = '".$req['match_id']."'")
+                    or die(mysqli_error());
                 } catch (\Exception $ex) {
                     if ($ex->getMessage() == "SERVER_BUSY") {
                         Logger::error(

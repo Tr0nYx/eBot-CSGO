@@ -27,14 +27,9 @@ abstract class Singleton
 
     protected function __construct()
     {
-
     }
 
     final protected function __clone()
     {
-
     }
-
 }
-
-?>

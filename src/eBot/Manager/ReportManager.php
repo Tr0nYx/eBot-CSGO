@@ -33,7 +33,7 @@ class ReportManager extends Singleton implements Taskable
         );
 
         try {
-            $this->rest_helper('http://www.esport-tools.net/ebot/report/send', json_encode($report), 'POST');
+            $this->resthelper('http://www.esport-tools.net/ebot/report/send', json_encode($report), 'POST');
             Logger::log('Report sent!');
         } catch (\Exception $e) {
             Logger::error('Unable to send the report to the eSport-tools.net website');
@@ -42,7 +42,7 @@ class ReportManager extends Singleton implements Taskable
         TaskManager::getInstance()->addTask(new Task($this, "sendReport", microtime(true) + 60 * 5), true);
     }
 
-    private function rest_helper($url, $params = null, $verb = 'GET', $format = 'json')
+    private function resthelper($url, $params = null, $verb = 'GET', $format = 'json')
     {
         $cparams = array(
             'http' => array(
@@ -72,21 +72,21 @@ class ReportManager extends Singleton implements Taskable
         }
 
         switch ($format) {
-        case 'json':
-            $r = json_decode($res);
-            if ($r === null) {
-                throw new \Exception("failed to decode $res as json");
-            }
+            case 'json':
+                $r = json_decode($res);
+                if ($r === null) {
+                    throw new \Exception("failed to decode $res as json");
+                }
 
-            return $r;
+                return $r;
 
-        case 'xml':
-            $r = simplexml_load_string($res);
-            if ($r === null) {
-                throw new \Exception("failed to decode $res as xml");
-            }
+            case 'xml':
+                $r = simplexml_load_string($res);
+                if ($r === null) {
+                    throw new \Exception("failed to decode $res as xml");
+                }
 
-            return $r;
+                return $r;
         }
 
         return $res;
@@ -100,6 +100,5 @@ class ReportManager extends Singleton implements Taskable
         );
 
         return $hash;
-
     }
 }

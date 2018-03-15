@@ -39,32 +39,30 @@ class PluginMatchScoreNotifier implements Plugin
     public function onEvent($event)
     {
         switch (get_class($event)) {
-        case \eBot\Events\EventDispatcher::EVENT_ROUNDSCORED:
-            if ($event->getMatch()->getIdentifier()) {
-                $url = str_replace("{MATCH_ID}", $event->getMatch()->getIdentifier(), $this->url);
-                $opts = array(
+            case \eBot\Events\EventDispatcher::EVENT_ROUNDSCORED:
+                if ($event->getMatch()->getIdentifier()) {
+                    $url = str_replace("{MATCH_ID}", $event->getMatch()->getIdentifier(), $this->url);
+                    $opts = array(
                     'http' => array(
                         'method' => "GET",
                         'header' => "Connection: Close",
                     ),
-                );
+                    );
 
-                $context = stream_context_create($opts);
-                Logger::log($event->getMatch()->getCurrentMapId()." - Perf $url");
-                file_get_contents($url, false, $context);
-            }
-            break;
+                    $context = stream_context_create($opts);
+                    Logger::log($event->getMatch()->getCurrentMapId()." - Perf $url");
+                    file_get_contents($url, false, $context);
+                }
+                break;
         }
     }
 
     public function onEventAdded($name)
     {
-
     }
 
     public function onEventRemoved($name)
     {
-
     }
 
     public function onReload()

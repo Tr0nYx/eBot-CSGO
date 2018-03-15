@@ -19,9 +19,11 @@ class KillAssist extends Message
 
     public function __construct()
     {
-        //"Clarence<4><BOT><CT>" assisted killing "Clarence<3><BOT><TERRORIST>"
         parent::__construct(
-            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<](?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" assisted killing "(?P<killed_user_name>.+)[<](?P<killed_user_id>\d+)[>][<](?P<killed_steam_id>.*)[>][<](?P<killed_user_team>CT|TERRORIST|Unassigned|Spectator)[>]"/'
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<]'.
+            '(?P<user_team>CT|TERRORIST|Unassigned|Spectator)[>]" assisted killing '.
+            '"(?P<killed_user_name>.+)[<](?P<killed_user_id>\d+)[>][<](?P<killed_steam_id>.*)'.
+            '[>][<](?P<killed_user_team>CT|TERRORIST|Unassigned|Spectator)[>]"/'
         );
     }
 

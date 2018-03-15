@@ -79,7 +79,4 @@ class Task
     {
         return $this->time;
     }
-
 }
-
-?>

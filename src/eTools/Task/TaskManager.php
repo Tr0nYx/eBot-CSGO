@@ -88,7 +88,4 @@ class TaskManager extends Singleton
             }
         }
     }
-
 }
-
-?>

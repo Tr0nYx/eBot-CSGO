@@ -15,5 +15,3 @@ interface Taskable
 
     public function taskExecute($name);
 }
-
-?>

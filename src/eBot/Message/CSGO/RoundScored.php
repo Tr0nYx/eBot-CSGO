@@ -20,7 +20,8 @@ class RoundScored extends Message
     public function __construct()
     {
         parent::__construct(
-            '/^Team "(?P<team>.*)" triggered "SFUI_Notice_(?P<team_win>Terrorists_Win|CTs_Win|Target_Bombed|Target_Saved|Bomb_Defused)/'
+            '/^Team "(?P<team>.*)" triggered '.
+            '"SFUI_Notice_(?P<team_win>Terrorists_Win|CTs_Win|Target_Bombed|Target_Saved|Bomb_Defused)/'
         );
     }
 
@@ -30,26 +31,26 @@ class RoundScored extends Message
         $o->setTeam($this->datas["team"]);
 
         switch ($this->datas["team_win"]) {
-        case "Target_Bombed":
-            $o->setType("bombeexploded");
-            $o->setTeamWin("T");
-            break;
-        case "Terrorists_Win":
-            $o->setType("normal");
-            $o->setTeamWin("T");
-            break;
-        case "Target_Saved":
-            $o->setType("saved");
-            $o->setTeamWin("CT");
-            break;
-        case "Bomb_Defused":
-            $o->setType("bombdefused");
-            $o->setTeamWin("CT");
-            break;
-        case "CTs_Win":
-            $o->setType("normal");
-            $o->setTeamWin("CT");
-            break;
+            case "Target_Bombed":
+                $o->setType("bombeexploded");
+                $o->setTeamWin("T");
+                break;
+            case "Terrorists_Win":
+                $o->setType("normal");
+                $o->setTeamWin("T");
+                break;
+            case "Target_Saved":
+                $o->setType("saved");
+                $o->setTeamWin("CT");
+                break;
+            case "Bomb_Defused":
+                $o->setType("bombdefused");
+                $o->setTeamWin("CT");
+                break;
+            case "CTs_Win":
+                $o->setType("normal");
+                $o->setTeamWin("CT");
+                break;
         }
 
         return $o;

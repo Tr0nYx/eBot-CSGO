@@ -173,7 +173,9 @@ class Match implements Taskable
         $this->addMatchLog("- Teams: ".$this->teamAName." - ".$this->teamBName, false, false);
         $this->addMatchLog("- MaxRound: ".$this->matchData["max_round"], false, false);
         $this->addMatchLog(
-            "- Overtime: ".($this->matchData["config_ot"]) ? "yes (money: ".$this->matchData['overtime_startmoney'].", round: ".$this->matchData['overtime_max_round'].")" : "no",
+            "- Overtime: ".($this->matchData["config_ot"]) ? "yes (money: ".
+                $this->matchData['overtime_startmoney'].
+                ", round: ".$this->matchData['overtime_max_round'].")" : "no",
             false,
             false
         );
@@ -189,7 +191,10 @@ class Match implements Taskable
             $this->rconPassword = $rcon;
             Logger::log("RCON init ok");
             $this->rcon->send(
-                "log on; mp_logdetail 3; logaddress_del ".Config::getInstance()->getLogAddressIp().":".Config::getInstance()->getBotPort().";logaddress_add ".Config::getInstance()->getLogAddressIp().":".Config::getInstance()->getBotPort()
+                "log on; mp_logdetail 3; logaddress_del ".Config::getInstance()->getLogAddressIp().
+                ":".Config::getInstance()->getBotPort().
+                ";logaddress_add ".Config::getInstance()->getLogAddressIp().
+                ":".Config::getInstance()->getBotPort()
             );
             $this->rcon->send(
                 "sv_rcon_whitelist_address \"".Config::getInstance()->getLogAddressIp()."\""
@@ -200,22 +205,33 @@ class Match implements Taskable
             if (!is_numeric(MatchManager::getInstance()->getRetry($this->match_id))) {
                 if ($this->status == 1) {
                     mysqli_query(
-                        "UPDATE `matchs` SET `enable` = 0, `auto_start` = 0, `status` = 0 WHERE `id` = '".$this->match_id."'"
+                        null,
+                        "UPDATE `matchs`
+                        SET `enable` = 0, `auto_start` = 0, `status` = 0
+                        WHERE `id` = '".$this->match_id."'"
                     );
                 } else {
                     mysqli_query(
-                        "UPDATE `matchs` SET `enable` = 0, `auto_start` = 0 WHERE `id` = '".$this->match_id."'"
+                        null,
+                        "UPDATE `matchs`
+                        SET `enable` = 0, `auto_start` = 0
+                        WHERE `id` = '".$this->match_id."'"
                     );
                 }
             } else {
                 if (MatchManager::getInstance()->getRetry($this->match_id) > 3) {
                     if ($this->status == 1) {
                         mysqli_query(
-                            "UPDATE `matchs` SET `enable` = 0, `auto_start` = 0, `status` = 0 WHERE `id` = '".$this->match_id."'"
+                            null,
+                            "UPDATE `matchs`
+                            SET `enable` = 0, `auto_start` = 0, `status` = 0
+                            WHERE `id` = '".$this->match_id."'"
                         );
                     } else {
                         mysqli_query(
-                            "UPDATE `matchs` SET `enable` = 0, `auto_start` = 0 WHERE `id` = '".$this->match_id."'"
+                            "UPDATE `matchs`
+                            SET `enable` = 0, `auto_start` = 0
+                            WHERE `id` = '".$this->match_id."'"
                         );
                     }
                 } else {
@@ -352,7 +368,9 @@ class Match implements Taskable
         }
 
         $this->addLog(
-            "Maps selected: #".$this->currentMap->getMapId()." - ".$this->currentMap->getMapName()." - ".$this->currentMap->getStatusText()
+            "Maps selected: #".$this->currentMap->getMapId()." - ".
+            $this->currentMap->getMapName().
+            " - ".$this->currentMap->getStatusText()
         );
 
         if ($this->currentMap->getMapName() != "tba") {
@@ -364,7 +382,8 @@ class Match implements Taskable
         }
 
         if ($this->getStatus() == self::STATUS_STARTING) {
-            if (($this->currentMap->getStatus() == Map::STATUS_NOT_STARTED) || ($this->currentMap->getStatus() == Map::STATUS_STARTING)
+            if (($this->currentMap->getStatus() == Map::STATUS_NOT_STARTED)
+                || ($this->currentMap->getStatus() == Map::STATUS_STARTING)
             ) {
                 if ($this->config_kniferound) {
                     Logger::debug("Setting need knife round on map");
@@ -387,7 +406,8 @@ class Match implements Taskable
                 }
             }
         } else {
-            if (($this->currentMap->getStatus() == Map::STATUS_NOT_STARTED) || ($this->currentMap->getStatus() == Map::STATUS_STARTING)
+            if (($this->currentMap->getStatus() == Map::STATUS_NOT_STARTED)
+                || ($this->currentMap->getStatus() == Map::STATUS_STARTING)
             ) {
                 if ($this->currentMap->getMapName() != "tba") {
                     Logger::debug("Current map is not started/starting, engaging map");
@@ -437,7 +457,10 @@ class Match implements Taskable
         $this->score["team_b"] = $this->currentMap->getScore2();
 
         mysqli_query(
-            "UPDATE `matchs` SET score_a = '".$this->score["team_a"]."', score_b ='".$this->score["team_b"]."' WHERE id='".$this->match_id."'"
+            null,
+            "UPDATE `matchs`
+            SET score_a = '".$this->score["team_a"]."', score_b ='".$this->score["team_b"]."'
+            WHERE id='".$this->match_id."'"
         );
 
         // Setting nb OverTime
@@ -501,18 +524,18 @@ class Match implements Taskable
                 if (preg_match('!#(\d+) "(.*)" (.*) (\d+) (\d+).(\d+).(\d+).(\d+)!', $v, $arr)) {
                     $ip = $arr[5].".".$arr[6].".".$arr[7].".".$arr[8];
                     switch ($arr[4]) {
-                    case 0:
-                        $team = "";
-                        break;
-                    case 1:
-                        $team = "SPECTATOR";
-                        break;
-                    case 2:
-                        $team = "TERRORIST";
-                        break;
-                    case 3:
-                        $team = "CT";
-                        break;
+                        case 0:
+                            $team = "";
+                            break;
+                        case 1:
+                            $team = "SPECTATOR";
+                            break;
+                        case 2:
+                            $team = "TERRORIST";
+                            break;
+                        case 3:
+                            $team = "CT";
+                            break;
                     }
 
                     $this->userToEnter[$arr[1]] = $ip;
@@ -535,34 +558,34 @@ class Match implements Taskable
             $round = "#";
         }
         switch ($this->getStatus()) {
-        case self::STATUS_NOT_STARTED:
-            return "Not started";
-        case self::STATUS_STARTING:
-            return "Starting";
-        case self::STATUS_WU_KNIFE:
-            return "Warmup Knife";
-        case self::STATUS_KNIFE:
-            return "Knife Round";
-        case self::STATUS_END_KNIFE:
-            return "Waiting choose team - Knife Round";
-        case self::STATUS_WU_1_SIDE:
-            return "Warmup first side";
-        case self::STATUS_FIRST_SIDE:
-            return "First side - ".$round.$this->getNbRound();
-        case self::STATUS_WU_2_SIDE:
-            return "Warmup second side";
-        case self::STATUS_SECOND_SIDE:
-            return "Second side - ".$round.$this->getNbRound();
-        case self::STATUS_WU_OT_1_SIDE:
-            return "Warmup first side OverTime";
-        case self::STATUS_OT_FIRST_SIDE:
-            return "First side OverTime - ".$round.$this->getNbRound();
-        case self::STATUS_WU_OT_2_SIDE:
-            return "Warmup second side OverTime";
-        case self::STATUS_OT_SECOND_SIDE:
-            return "Second side OverTime - ".$round.$this->getNbRound();
-        case self::STATUS_END_MATCH:
-            return "Finished";
+            case self::STATUS_NOT_STARTED:
+                return "Not started";
+            case self::STATUS_STARTING:
+                return "Starting";
+            case self::STATUS_WU_KNIFE:
+                return "Warmup Knife";
+            case self::STATUS_KNIFE:
+                return "Knife Round";
+            case self::STATUS_END_KNIFE:
+                return "Waiting choose team - Knife Round";
+            case self::STATUS_WU_1_SIDE:
+                return "Warmup first side";
+            case self::STATUS_FIRST_SIDE:
+                return "First side - ".$round.$this->getNbRound();
+            case self::STATUS_WU_2_SIDE:
+                return "Warmup second side";
+            case self::STATUS_SECOND_SIDE:
+                return "Second side - ".$round.$this->getNbRound();
+            case self::STATUS_WU_OT_1_SIDE:
+                return "Warmup first side OverTime";
+            case self::STATUS_OT_FIRST_SIDE:
+                return "First side OverTime - ".$round.$this->getNbRound();
+            case self::STATUS_WU_OT_2_SIDE:
+                return "Warmup second side OverTime";
+            case self::STATUS_OT_SECOND_SIDE:
+                return "Second side OverTime - ".$round.$this->getNbRound();
+            case self::STATUS_END_MATCH:
+                return "Finished";
         }
     }
 
@@ -586,7 +609,12 @@ class Match implements Taskable
             if ($newStatus == self::STATUS_END_MATCH) {
                 $setDisable = ", enable = '0'";
             }
-            mysqli_query("UPDATE `matchs` SET status='".$newStatus."' ".$setDisable." WHERE id='".$this->match_id."'");
+            mysqli_query(
+                null,
+                "UPDATE `matchs`
+                SET status='".$newStatus."' ".$setDisable."
+                WHERE id='".$this->match_id."'"
+            );
         }
     }
 
@@ -689,7 +717,10 @@ class Match implements Taskable
             $this->addLog("Stopping record and pushing demo...");
             if (Config::getInstance()->getDemoDownload()) {
                 $this->rcon->send(
-                    'tv_stoprecord; '.'csay_tv_demo_push "'.$this->currentRecordName.'.dem" "'.(Config::getInstance()->isSSLEnabled() ? 'https' : 'http').'://'.Config::getInstance()->getLogAddressIp().':'.Config::getInstance()->getBotPort().'/upload"'
+                    'tv_stoprecord; '.'csay_tv_demo_push "'.$this->currentRecordName.'.dem" "'.
+                    (Config::getInstance()->isSSLEnabled() ? 'https' : 'http').
+                    '://'.Config::getInstance()->getLogAddressIp().
+                    ':'.Config::getInstance()->getBotPort().'/upload"'
                 );
             } else {
                 $this->rcon->send("tv_stoprecord");
@@ -698,11 +729,19 @@ class Match implements Taskable
             $this->rcon->send("exec server.cfg;");
         } elseif ($name == self::TASK_DELAY_READY) {
             if (Config::getInstance()->getDelayReady()) {
-                if ($this->delay_ready_countdown > 0 && !$this->delay_ready_abort && $this->ready['ct'] && $this->ready['t']) {
+                if ($this->delay_ready_countdown > 0
+                    && !$this->delay_ready_abort
+                    && $this->ready['ct']
+                    && $this->ready['t']
+                ) {
                     $this->say("Match starts in ".$this->delay_ready_countdown." seconds. !abort to stop countdown.");
                     $this->delay_ready_countdown--;
                     TaskManager::getInstance()->addTask(new Task($this, self::TASK_DELAY_READY, microtime(true) + 1));
-                } elseif ($this->delay_ready_countdown == 0 && !$this->delay_ready_abort && $this->ready['ct'] && $this->ready['t']) {
+                } elseif ($this->delay_ready_countdown == 0
+                    && !$this->delay_ready_abort
+                    && $this->ready['ct']
+                    && $this->ready['t']
+                ) {
                     $this->delay_ready_abort = false;
                     $this->delay_ready_countdown = 10;
                     $this->delay_ready_inprogress = false;
@@ -726,7 +765,8 @@ class Match implements Taskable
             return;
         }
 
-        if ((($this->currentMap->getStatus() == Map::STATUS_STARTING) || ($this->currentMap->getStatus() == Map::STATUS_NOT_STARTED)) OR !$this->mapIsEngaged
+        if ((($this->currentMap->getStatus() == Map::STATUS_STARTING)
+                || ($this->currentMap->getStatus() == Map::STATUS_NOT_STARTED)) or !$this->mapIsEngaged
         ) {
             $this->addLog("Engaging the first map...");
 
@@ -736,7 +776,8 @@ class Match implements Taskable
 
             // Changing map
             $this->addLog("Changing map to: '".$this->currentMap->getMapName()."'.");
-            if (Config::getInstance()->getWorkshop() && Config::getInstance()->getWorkshopByMap($this->currentMap->getMapName())
+            if (Config::getInstance()->getWorkshop()
+                && Config::getInstance()->getWorkshopByMap($this->currentMap->getMapName())
             ) {
                 $this->rcon->send(
                     "changelevel workshop/".Config::getInstance()->getWorkshopByMap(
@@ -778,12 +819,20 @@ class Match implements Taskable
 
     private function isWarmupRound()
     {
-        return ($this->getStatus() == self::STATUS_WU_1_SIDE) || ($this->getStatus() == self::STATUS_WU_2_SIDE) || ($this->getStatus() == self::STATUS_WU_KNIFE) || ($this->getStatus() == self::STATUS_WU_OT_1_SIDE) || ($this->getStatus() == self::STATUS_WU_OT_2_SIDE);
+        return ($this->getStatus() == self::STATUS_WU_1_SIDE)
+            || ($this->getStatus() == self::STATUS_WU_2_SIDE)
+            || ($this->getStatus() == self::STATUS_WU_KNIFE)
+            || ($this->getStatus() == self::STATUS_WU_OT_1_SIDE)
+            || ($this->getStatus() == self::STATUS_WU_OT_2_SIDE);
     }
 
     private function isMatchRound()
     {
-        return ($this->getStatus() == self::STATUS_KNIFE) || ($this->getStatus() == self::STATUS_FIRST_SIDE) || ($this->getStatus() == self::STATUS_SECOND_SIDE) || ($this->getStatus() == self::STATUS_OT_FIRST_SIDE) || ($this->getStatus() == self::STATUS_OT_SECOND_SIDE);
+        return ($this->getStatus() == self::STATUS_KNIFE)
+            || ($this->getStatus() == self::STATUS_FIRST_SIDE)
+            || ($this->getStatus() == self::STATUS_SECOND_SIDE)
+            || ($this->getStatus() == self::STATUS_OT_FIRST_SIDE)
+            || ($this->getStatus() == self::STATUS_OT_SECOND_SIDE);
     }
 
     public function sendRotateMessage()
@@ -838,21 +887,21 @@ class Match implements Taskable
                     $message = "";
                     // Récupération du texte
                     switch ($this->getStatus()) {
-                    case self::STATUS_WU_KNIFE:
-                        $message = "Warmup Knife Round";
-                        break;
-                    case self::STATUS_WU_1_SIDE:
-                        $message = "Warmup First Side";
-                        break;
-                    case self::STATUS_WU_2_SIDE:
-                        $message = "Warmup Second Side";
-                        break;
-                    case self::STATUS_WU_OT_1_SIDE:
-                        $message = "Warmup First Side OverTime";
-                        break;
-                    case self::STATUS_WU_OT_2_SIDE:
-                        $message = "Warmup Second Side OverTime";
-                        break;
+                        case self::STATUS_WU_KNIFE:
+                            $message = "Warmup Knife Round";
+                            break;
+                        case self::STATUS_WU_1_SIDE:
+                            $message = "Warmup First Side";
+                            break;
+                        case self::STATUS_WU_2_SIDE:
+                            $message = "Warmup Second Side";
+                            break;
+                        case self::STATUS_WU_OT_1_SIDE:
+                            $message = "Warmup First Side OverTime";
+                            break;
+                        case self::STATUS_WU_OT_2_SIDE:
+                            $message = "Warmup Second Side OverTime";
+                            break;
                     }
                     if ($this->mapIsEngaged && ($this->streamerReady || !$this->config_streamer)) {
                         if ($this->getStatus() == self::STATUS_END_KNIFE) {
@@ -959,7 +1008,7 @@ class Match implements Taskable
         }
     }
 
-    public function say_player($playerId, $message, $color)
+    public function sayPlayer($playerId, $message, $color)
     {
         if ($color) {
             $message = $this->formatText($message, $color);
@@ -1003,53 +1052,53 @@ class Match implements Taskable
 
         if ($message != null) {
             switch (get_class($message)) {
-            case "eBot\Message\Type\BombDefusing":
-                return $this->processBombDefusing($message);
-            case "eBot\Message\Type\BombPlanting":
-                return $this->processBombPlanting($message);
-            case "eBot\Message\Type\ChangeMap":
-                return $this->processChangeMap($message);
-            case "eBot\Message\Type\ChangeName":
-                return $this->processChangeName($message);
-            case "eBot\Message\Type\Connected":
-                return $this->processConnected($message);
-            case "eBot\Message\Type\Disconnected":
-                return $this->processDisconnected($message);
-            case "eBot\Message\Type\EnteredTheGame":
-                return $this->processEnteredTheGame($message);
-            case "eBot\Message\Type\GotTheBomb":
-                return $this->processGotTheBomb($message);
-            case "eBot\Message\Type\JoinTeam":
-                return $this->processJoinTeam($message);
-            case "eBot\Message\Type\Attacked":
-                return $this->processAttacked($message);
-            case "eBot\Message\Type\Kill":
-                return $this->processKill($message);
-            case "eBot\Message\Type\KillAssist":
-                return $this->processKillAssist($message);
-            case "eBot\Message\Type\RoundRestart":
-                return $this->processRoundRestart($message);
-            case "eBot\Message\Type\RoundScored":
-                return $this->processRoundScored($message);
-            case "eBot\Message\Type\RemindRoundScored":
-                return $this->processRemindRoundScored($message);
-            case "eBot\Message\Type\RoundStart":
-                return $this->processRoundStart($message);
-            case "eBot\Message\Type\RoundSpawn":
-                return $this->processRoundSpawn($message);
-            case "eBot\Message\Type\Say":
-                return $this->processSay($message);
-            case "eBot\Message\Type\ThrewStuff":
-                return $this->processThrewStuff($message);
-            case "eBot\Message\Type\Purchased":
-                return $this->processPurchased($message);
-            case "eBot\Message\Type\TeamScored":
-                return $this->processTeamScored($message);
-            case "eBot\Message\Type\RoundEnd":
-                return $this->processRoundEnd($message);
-            default:
-                $this->addLog("Untreated message: ".get_class($message).".");
-                break;
+                case "eBot\Message\Type\BombDefusing":
+                    return $this->processBombDefusing($message);
+                case "eBot\Message\Type\BombPlanting":
+                    return $this->processBombPlanting($message);
+                case "eBot\Message\Type\ChangeMap":
+                    return $this->processChangeMap($message);
+                case "eBot\Message\Type\ChangeName":
+                    return $this->processChangeName($message);
+                case "eBot\Message\Type\Connected":
+                    return $this->processConnected($message);
+                case "eBot\Message\Type\Disconnected":
+                    return $this->processDisconnected($message);
+                case "eBot\Message\Type\EnteredTheGame":
+                    return $this->processEnteredTheGame($message);
+                case "eBot\Message\Type\GotTheBomb":
+                    return $this->processGotTheBomb($message);
+                case "eBot\Message\Type\JoinTeam":
+                    return $this->processJoinTeam($message);
+                case "eBot\Message\Type\Attacked":
+                    return $this->processAttacked($message);
+                case "eBot\Message\Type\Kill":
+                    return $this->processKill($message);
+                case "eBot\Message\Type\KillAssist":
+                    return $this->processKillAssist($message);
+                case "eBot\Message\Type\RoundRestart":
+                    return $this->processRoundRestart($message);
+                case "eBot\Message\Type\RoundScored":
+                    return $this->processRoundScored($message);
+                case "eBot\Message\Type\RemindRoundScored":
+                    return $this->processRemindRoundScored($message);
+                case "eBot\Message\Type\RoundStart":
+                    return $this->processRoundStart($message);
+                case "eBot\Message\Type\RoundSpawn":
+                    return $this->processRoundSpawn($message);
+                case "eBot\Message\Type\Say":
+                    return $this->processSay($message);
+                case "eBot\Message\Type\ThrewStuff":
+                    return $this->processThrewStuff($message);
+                case "eBot\Message\Type\Purchased":
+                    return $this->processPurchased($message);
+                case "eBot\Message\Type\TeamScored":
+                    return $this->processTeamScored($message);
+                case "eBot\Message\Type\RoundEnd":
+                    return $this->processRoundEnd($message);
+                default:
+                    $this->addLog("Untreated message: ".get_class($message).".");
+                    break;
             }
         }
     }
@@ -1184,8 +1233,14 @@ class Match implements Taskable
                     INSERT INTO `round`
                     (`match_id`,`map_id`,`event_name`,`event_text`,`event_time`,`round_id`,`created_at`,`updated_at`)
                         VALUES
-                    ('".$this->match_id."', '".$this->currentMap->getMapId()."', 'bomb_planting', '".$text."', '".$this->getRoundTime()."', '".$this->getNbRound()."', NOW(), NOW())
-                        "
+                    ('".$this->match_id."',
+                    '".$this->currentMap->getMapId()."',
+                    'bomb_planting',
+                    '".$text."',
+                    '".$this->getRoundTime()."',
+                    '".$this->getNbRound()."',
+                    NOW(),
+                    NOW())"
         );
     }
 
@@ -1228,8 +1283,14 @@ class Match implements Taskable
                     INSERT INTO `round`
                     (`match_id`,`map_id`,`event_name`,`event_text`,`event_time`,`round_id`,`created_at`,`updated_at`)
                         VALUES
-                    ('".$this->match_id."', '".$this->currentMap->getMapId()."', 'bomb_defusing', '".$text."', '".$this->getRoundTime()."', '".$this->getNbRound()."', NOW(), NOW())
-                        "
+                    ('".$this->match_id."',
+                    '".$this->currentMap->getMapId()."',
+                    'bomb_defusing',
+                    '".$text."',
+                    '".$this->getRoundTime()."',
+                    '".$this->getNbRound()."',
+                    NOW(),
+                    NOW())"
         );
     }
 
@@ -1255,16 +1316,40 @@ class Match implements Taskable
             );
 
             mysqli_query(
-                "INSERT INTO `players_heatmap` (`match_id`,`map_id`,`event_name`,`event_x`,`event_y`,`event_z`,`player_name`,`player_id`,`player_team`,`round_id`,`round_time`, `created_at`,`updated_at`)
+                "INSERT INTO `players_heatmap` (
+                `match_id`,
+                `map_id`,
+                `event_name`,
+                `event_x`,
+                `event_y`,
+                `event_z`,
+                `player_name`,
+                `player_id`,
+                `player_team`,
+                `round_id`,
+                `round_time`,
+                `created_at`,
+                `updated_at`)
                 VALUES
-                (".$this->match_id.", ".$this->currentMap->getMapId().", '".$message->stuff."', '".$message->posX."', '".$message->posY."', '".$message->posZ."', '".addslashes(
-                    $message->userName
-                )."', '".$user->getId()."', '".$message->userTeam."', '".$this->getNbRound()."', '".$this->getRoundTime()."', NOW(), NOW())
-                "
+                (
+                ".$this->match_id.",
+                ".$this->currentMap->getMapId().",
+                '".$message->stuff."',
+                '".$message->posX."',
+                '".$message->posY."',
+                '".$message->posZ."',
+                '".addslashes($message->userName)."',
+                '".$user->getId()."',
+                '".$message->userTeam."',
+                '".$this->getNbRound()."',
+                '".$this->getRoundTime()."',
+                NOW(),
+                NOW())"
             );
 
             $this->addLog(
-                $message->userName." (".$message->userTeam.") threw ".$message->stuff." at [".$message->posX." ".$message->posY." ".$message->posZ."]."
+                $message->userName." (".$message->userTeam.") threw ".$message->stuff.
+                " at [".$message->posX." ".$message->posY." ".$message->posZ."]."
             );
         }
     }
@@ -1298,13 +1383,28 @@ class Match implements Taskable
             mysqli_query(
                 "
                         INSERT INTO `round`
-                        (`match_id`,`map_id`,`event_name`,`event_text`,`event_time`,`round_id`,`created_at`,`updated_at`)
-                            VALUES
-                        ('".$this->match_id."', '".$this->currentMap->getMapId()."', 'purchased', '$text', '".$this->getRoundTime()."', '".$this->getNbRound()."', NOW(), NOW())
-                            "
+                        (
+                        `match_id`,
+                        `map_id`,
+                        `event_name`,
+                        `event_text`,
+                        `event_time`,
+                        `round_id`,
+                        `created_at`,
+                        `updated_at`
+                        )
+                        VALUES
+                        (
+                        '".$this->match_id."',
+                        '".$this->currentMap->getMapId()."',
+                        'purchased',
+                        '$text',
+                        '".$this->getRoundTime()."',
+                        '".$this->getNbRound()."',
+                        NOW(),
+                        NOW()
+                        )"
             );
-
-            //          $this->addLog($message->userName . " (" . $message->userTeam . ") purchased " . $message->object);
         }
     }
 
@@ -1314,7 +1414,8 @@ class Match implements Taskable
         $text = strtolower(trim($message->getText()));
         if ($text == "!$command" || $text == ".$command") {
             $this->addLog(
-                "User: '".$message->getUserName()."' (Team: '".$message->getUserTeam()."', userId: '".$message->userId."') executes command: '$command'."
+                "User: '".$message->getUserName()."' (Team: '".$message->getUserTeam().
+                "', userId: '".$message->userId."') executes command: '$command'."
             );
 
             return true;
@@ -1343,7 +1444,12 @@ class Match implements Taskable
 
         $text = trim($message->getText());
         if (preg_match('/\!map (?<mapname>.*)/i', $text, $preg)) {
-            if (!$this->mapIsEngaged && (($this->getStatus() == self::STATUS_WU_KNIFE && $this->config_kniferound) || ($this->getStatus() == self::STATUS_WU_1_SIDE && !$this->config_kniferound))
+            if (!$this->mapIsEngaged
+                && (
+                    ($this->getStatus() == self::STATUS_WU_KNIFE && $this->config_kniferound)
+                    ||
+                    ($this->getStatus() == self::STATUS_WU_1_SIDE && !$this->config_kniferound)
+                )
             ) {
                 $this->addLog(
                     $message->getUserName()." (".$message->getUserTeam().") wants to play '".$preg['mapname']."'."
@@ -1387,7 +1493,7 @@ class Match implements Taskable
             }
         } elseif ($this->isCommand($message, "stats")) {
             if ($user) {
-                $this->say_player($message->userId, "Stats for ".$message->userName.":");
+                $this->sayPlayer($message->userId, "Stats for ".$message->userName.":");
                 if ($user->get("death") == 0) {
                     $ratio = $user->get("kill");
                 } else {
@@ -1400,21 +1506,21 @@ class Match implements Taskable
                     $ratiohs = round(($user->get("hs") / $user->get("kill")) * 100, 2);
                 }
 
-                $this->say_player(
+                $this->sayPlayer(
                     $message->userId,
                     $this->formatText("Kill: ", "ltGreen").$this->formatText(
                         $user->get("kill"),
                         "green"
                     )." - ".$this->formatText("HS: ", "ltGreen").$this->formatText($user->get("hs"), "green")
                 );
-                $this->say_player(
+                $this->sayPlayer(
                     $message->userId,
                     $this->formatText("Death: ", "ltGreen").$this->formatText(
                         $user->get("death"),
                         "green"
                     )." - ".$this->formatText("Score: ", "ltGreen").$this->formatText($user->get("point"), "green")
                 );
-                $this->say_player(
+                $this->sayPlayer(
                     $message->userId,
                     $this->formatText("Ratio K/D: ", "ltGreen").$this->formatText(
                         $ratio,
@@ -1422,11 +1528,11 @@ class Match implements Taskable
                     )." - ".$this->formatText("\005HS%: ", "ltGreen").$this->formatText($ratiohs, "green")
                 );
             } else {
-                $this->say_player($message->userId, "No stats yet for ".$message->userName);
+                $this->sayPlayer($message->userId, "No stats yet for ".$message->userName);
             }
         } elseif ($this->isCommand($message, "morestats")) {
             if ($user) {
-                $this->say_player($message->userId, "Stats for ".$message->userName.":");
+                $this->sayPlayer($message->userId, "Stats for ".$message->userName.":");
 
                 $stats = array();
                 for ($i = 1; $i <= 5; $i++) {
@@ -1474,35 +1580,35 @@ class Match implements Taskable
                     }
 
                     if ($count == 2) {
-                        $this->say_player($message->userId, "$messageText");
+                        $this->sayPlayer($message->userId, "$messageText");
                         $messageText = "";
                         $count = 0;
                     }
                 }
 
                 if ($count > 0) {
-                    $this->say_player($message->userId, "$messageText");
+                    $this->sayPlayer($message->userId, "$messageText");
                 }
 
                 if ($doit) {
-                    $this->say_player($message->userId, "No stats yet.");
+                    $this->sayPlayer($message->userId, "No stats yet.");
                 }
             } else {
-                $this->say_player(
+                $this->sayPlayer(
                     $message->userId,
                     "No stats yet for ".$this->formatText($message->userName, "ltGreen")."."
                 );
             }
         } elseif ($this->isCommand($message, "rules")) {
             if ($this->pluginCsay) {
-                $this->say_player(
+                $this->sayPlayer(
                     $message->userId,
                     "Full Score: ".$this->formatText(
                         (($this->config_full_score) ? "yes" : "no"),
                         "ltGreen"
                     )." :: Switch Auto: ".$this->formatText((($this->config_switch_auto) ? "yes" : "no"), "ltGreen")
                 );
-                $this->say_player(
+                $this->sayPlayer(
                     $message->userId,
                     "Over Time: ".$this->formatText(
                         (($this->config_ot) ? "yes" : "no"),
@@ -1512,9 +1618,10 @@ class Match implements Taskable
             }
         } elseif ($this->isCommand($message, "help")) {
             if ($this->pluginCsay) {
-                $this->say_player(
+                $this->sayPlayer(
                     $message->userId,
-                    "commands available: !help, !status, !stats, !morestats, !score, !ready, !notready, !stop, !restart (for knife round), !stay, !switch"
+                    "commands available: !help, !status, !stats, !morestats, ".
+                    "!score, !ready, !notready, !stop, !restart (for knife round), !stay, !switch"
                 );
             }
         } elseif ($this->isCommand($message, "restart")) {
@@ -1602,7 +1709,8 @@ class Match implements Taskable
                 $this->say("Please wait until they are ready.");
             } else {
                 if ($message->getUserTeam() == "CT") {
-                    if (($this->getStatus() == self::STATUS_WU_2_SIDE) || ($this->getStatus() == self::STATUS_WU_OT_2_SIDE)
+                    if (($this->getStatus() == self::STATUS_WU_2_SIDE)
+                        || ($this->getStatus() == self::STATUS_WU_OT_2_SIDE)
                     ) {
                         $team = ($this->side['team_a'] == "ct") ? $this->teamBName : $this->teamAName;
                     } else {
@@ -1616,7 +1724,8 @@ class Match implements Taskable
                         $this->say($team." (CT) is already ".$this->formatText("ready.", "green"));
                     }
                 } elseif ($message->getUserTeam() == "TERRORIST") {
-                    if (($this->getStatus() == self::STATUS_WU_2_SIDE) || ($this->getStatus() == self::STATUS_WU_OT_2_SIDE)
+                    if (($this->getStatus() == self::STATUS_WU_2_SIDE)
+                        || ($this->getStatus() == self::STATUS_WU_OT_2_SIDE)
                     ) {
                         $team = ($this->side['team_a'] == "t") ? $this->teamBName : $this->teamAName;
                     } else {
@@ -1636,7 +1745,6 @@ class Match implements Taskable
             }
         } elseif ($this->isCommand($message, "pause")) {
             if ($this->isMatchRound() && !$this->isPaused && $this->enable) {
-
                 if ($message->getUserTeam() == "CT") {
                     $team = ($this->side['team_a'] == "ct") ? $this->teamAName : $this->teamBName;
                     if (!$this->pause['ct']) {
@@ -1685,20 +1793,22 @@ class Match implements Taskable
 
                 $this->unpauseMatch();
             }
-        } elseif (($this->getStatus() == self::STATUS_END_KNIFE) && ($message->getUserTeam() == $this->winKnife) && $this->isCommand(
-            $message,
-            "stay"
-        )
+        } elseif (($this->getStatus() == self::STATUS_END_KNIFE)
+            && ($message->getUserTeam() == $this->winKnife) && $this->isCommand(
+                $message,
+                "stay"
+            )
         ) {
             $this->setStatus(self::STATUS_WU_1_SIDE, true);
             $this->currentMap->setStatus(Map::STATUS_WU_1_SIDE, true);
 
             $this->undoKnifeConfig()->executeMatchConfig()->executeWarmupConfig();
             $this->say("Nothing changed, going to warmup!");
-        } elseif (($this->getStatus() == self::STATUS_END_KNIFE) && ($message->getUserTeam() == $this->winKnife) && ($this->isCommand(
-            $message,
-            "switch"
-        ) || $this->isCommand($message, "swap"))
+        } elseif (($this->getStatus() == self::STATUS_END_KNIFE)
+            && ($message->getUserTeam() == $this->winKnife) && ($this->isCommand(
+                $message,
+                "switch"
+            ) || $this->isCommand($message, "swap"))
         ) {
             $this->setStatus(self::STATUS_WU_1_SIDE, true);
             $this->currentMap->setStatus(Map::STATUS_WU_1_SIDE, true);
@@ -1746,12 +1856,12 @@ class Match implements Taskable
         } elseif ($this->isCommand($message, "status")) {
             if ($this->pluginCsay) {
                 if ($this->enable) {
-                    $this->say_player(
+                    $this->sayPlayer(
                         $message->userId,
                         "Current status: ".$this->formatText($this->getStatusText(), "red")."."
                     );
                 } else {
-                    $this->say_player(
+                    $this->sayPlayer(
                         $message->userId,
                         "Current status: ".$this->formatText($this->getStatusText(), "red")." - Match paused."
                     );
@@ -1759,7 +1869,7 @@ class Match implements Taskable
             }
         } elseif ($this->isCommand($message, "status2")) { // DUPLICATE - REMOVE? TODO
             if ($this->pluginCsay) {
-                $this->say_player(
+                $this->sayPlayer(
                     $message->userId,
                     $this->formatText($this->teamAName, "ltGreen")." ".$this->formatText(
                         $this->currentMap->getScore1(),
@@ -1776,7 +1886,9 @@ class Match implements Taskable
             // NOT FINISHED - TODO
             $this->say("Status = '".$this->getStatus()."' (".$this->getStatusText().").");
         } elseif ($this->isCommand($message, "fixwarmup")) {
-            if (($this->getStatus() == self::STATUS_WU_1_SIDE || $this->getStatus() == self::STATUS_WU_KNIFE) && !$this->warmupManualFixIssued
+            if (($this->getStatus() == self::STATUS_WU_1_SIDE
+                    || $this->getStatus() == self::STATUS_WU_KNIFE)
+                && !$this->warmupManualFixIssued
             ) {
                 $this->say("Executing warmup config again.");
                 $this->executeWarmupConfig();
@@ -1798,22 +1910,22 @@ class Match implements Taskable
         }
 
         switch ($message->getType()) {
-        case \eBot\Message\Type\Say::SAY:
-            $this->addMatchLog(
-                $this->getColoredUserNameHTML($message->getUserName(), $message->getUserTeam()).": ".htmlentities(
-                    $message->getText()
-                )
-            );
-            break;
-        case \eBot\Message\Type\Say::SAY_TEAM:
-            $this->addMatchLog(
-                $this->getColoredUserNameHTML(
-                    $message->getUserName(),
-                    $message->getUserTeam()
-                )." (private): ".htmlentities($message->getText()),
-                true
-            );
-            break;
+            case \eBot\Message\Type\Say::SAY:
+                $this->addMatchLog(
+                    $this->getColoredUserNameHTML($message->getUserName(), $message->getUserTeam()).": ".htmlentities(
+                        $message->getText()
+                    )
+                );
+                break;
+            case \eBot\Message\Type\Say::SAY_TEAM:
+                $this->addMatchLog(
+                    $this->getColoredUserNameHTML(
+                        $message->getUserName(),
+                        $message->getUserTeam()
+                    )." (private): ".htmlentities($message->getText()),
+                    true
+                );
+                break;
         }
     }
 
@@ -1876,9 +1988,9 @@ class Match implements Taskable
                     if ($nbAlive == 1) {
                         if (($this->specialSituation['side'] == strtolower(
                             $team
-                        )) || ($this->specialSituation['side'] == "both") || ($this->specialSituation['side2'] == "both")
+                        )) || ($this->specialSituation['side'] == "both")
+                            || ($this->specialSituation['side2'] == "both")
                         ) {
-
                             if ($this->specialSituation['side2'] == "both") {
                                 if ($this->specialSituation['side'] != "both") {
                                     $nbAlive = 0;
@@ -1920,12 +2032,13 @@ class Match implements Taskable
                                             "playerName" => $this->players[$id]->get("name"),
                                         );
                                         mysqli_query(
-                                            "UPDATE players SET nb1 = nb1 + 1 WHERE id = '".$this->players[$id]->getId()."'"
+                                            null,
+                                            "UPDATE players SET nb1 = nb1 + 1
+                                            WHERE id = '".$this->players[$id]->getId()."'"
                                         ) or Logger::error("Can't update ".$this->players[$id]->getId()." situation");
                                         $this->addLog(
-                                            "Successful special situation 1v".$this->specialSituation['situation']." for player '".$this->players[$id]->get(
-                                                "name"
-                                            )."'."
+                                            "Successful special situation 1v".$this->specialSituation['situation'].
+                                            " for player '".$this->players[$id]->get("name")."'."
                                         );
                                         $this->addMatchLog(
                                             "<b>".htmlentities(
@@ -1948,10 +2061,25 @@ class Match implements Taskable
                                         mysqli_query(
                                             "
                                             INSERT INTO `round`
-                                            (`match_id`,`map_id`,`event_name`,`event_text`,`event_time`,`round_id`,`created_at`,`updated_at`)
+                                            (
+                                            `match_id`,
+                                            `map_id`,
+                                            `event_name`,
+                                            `event_text`,
+                                            `event_time`,
+                                            `round_id`,
+                                            `created_at`,
+                                            `updated_at`)
                                                 VALUES
-                                            ('".$this->match_id."', '".$this->currentMap->getMapId()."', '1vx_ok', '$text','".$this->getRoundTime()."', '".$this->getNbRound()."', NOW(), NOW())
-                                                "
+                                            (
+                                            '".$this->match_id."',
+                                            '".$this->currentMap->getMapId()."',
+                                            '1vx_ok',
+                                            '$text',
+                                            '".$this->getRoundTime()."',
+                                            '".$this->getNbRound()."',
+                                            NOW(),
+                                            NOW())"
                                         );
                                     }
                                 }
@@ -1970,13 +2098,17 @@ class Match implements Taskable
                                         )."</b> won a 1v".$this->specialSituation['situation']."!"
                                     );
                                     mysqli_query(
-                                        "UPDATE players SET nb".$this->specialSituation['situation']." = nb".$this->specialSituation['situation']." + 1 WHERE id='".$this->players[$id]->getId()."'"
+                                        null,
+                                        "UPDATE players
+                                        SET nb".$this->specialSituation['situation']." = nb"
+                                        .$this->specialSituation['situation']." + 1
+                                        WHERE id='".$this->players[$id]->getId()."'"
                                     ) or Logger::error("Can't update ".$this->players[$id]->getId()." situation");
                                     $this->players[$id]->inc("v".$this->specialSituation['situation']);
                                     $this->addLog(
-                                        "Successful special situation 1v".$this->specialSituation['situation']." for player '".$this->players[$id]->get(
-                                            "name"
-                                        )."'."
+                                        "Successful special situation 1v".
+                                        $this->specialSituation['situation']." for player '".
+                                        $this->players[$id]->get("name")."'."
                                     );
 
                                     $text = \addslashes(
@@ -1993,10 +2125,27 @@ class Match implements Taskable
                                     mysqli_query(
                                         "
                                     INSERT INTO `round`
-                                    (`match_id`,`map_id`,`event_name`,`event_text`,`event_time`,`round_id`,`created_at`,`updated_at`)
+                                    (
+                                    `match_id`,
+                                    `map_id`,
+                                    `event_name`,
+                                    `event_text`,
+                                    `event_time`,
+                                    `round_id`,
+                                    `created_at`,
+                                    `updated_at`
+                                    )
                                         VALUES
-                                    ('".$this->match_id."', '".$this->currentMap->getMapId()."', '1vx_ok', '$text','".$this->getRoundTime()."', '".$this->getNbRound()."', NOW(), NOW())
-                                        "
+                                    (
+                                    '".$this->match_id."',
+                                    '".$this->currentMap->getMapId()."',
+                                    '1vx_ok',
+                                    '$text',
+                                    '".$this->getRoundTime()."',
+                                    '".$this->getNbRound()."',
+                                    NOW(),
+                                    NOW())
+                                    "
                                     );
                                 }
                             }
@@ -2017,10 +2166,25 @@ class Match implements Taskable
                     mysqli_query(
                         "
                         INSERT INTO `round`
-                        (`match_id`,`map_id`,`event_name`,`event_time`,`round_id`,`created_at`,`updated_at`)
+                        (
+                        `match_id`,
+                        `map_id`,
+                        `event_name`,
+                        `event_time`,
+                        `round_id`,
+                        `created_at`,
+                        `updated_at`
+                        )
                             VALUES
-                        ('".$this->match_id."', '".$this->currentMap->getMapId()."', 'bomb_defused', '".$this->getRoundTime()."', '".$this->getNbRound()."', NOW(), NOW())
-                            "
+                        (
+                        '".$this->match_id."',
+                        '".$this->currentMap->getMapId()."',
+                        'bomb_defused',
+                        '".$this->getRoundTime()."',
+                        '".$this->getNbRound()."',
+                        NOW(),
+                        NOW())
+                        "
                     );
                 }
             }
@@ -2035,10 +2199,25 @@ class Match implements Taskable
                     mysqli_query(
                         "
                         INSERT INTO `round`
-                        (`match_id`,`map_id`,`event_name`,`event_time`,`round_id`,`created_at`,`updated_at`)
+                        (
+                        `match_id`,
+                        `map_id`,
+                        `event_name`,
+                        `event_time`,
+                        `round_id`,
+                        `created_at`,
+                        `updated_at`
+                        )
                             VALUES
-                        ('".$this->match_id."', '".$this->currentMap->getMapId()."', 'bomb_exploded', '".$this->getRoundTime()."', '".$this->getNbRound()."', NOW(), NOW())
-                            "
+                        (
+                        '".$this->match_id."',
+                        '".$this->currentMap->getMapId()."',
+                        'bomb_exploded',
+                        '".$this->getRoundTime()."',
+                        '".$this->getNbRound()."',
+                        NOW(),
+                        NOW())
+                        "
                     );
                 }
             }
@@ -2047,10 +2226,24 @@ class Match implements Taskable
             mysqli_query(
                 "
                         INSERT INTO `round`
-                        (`match_id`,`map_id`,`event_name`,`event_time`,`round_id`,`created_at`,`updated_at`)
+                        (
+                        `match_id`,
+                        `map_id`,
+                        `event_name`,
+                        `event_time`,
+                        `round_id`,
+                        `created_at`,
+                        `updated_at`
+                        )
                             VALUES
-                        ('".$this->match_id."', '".$this->currentMap->getMapId()."', 'round_end', '".$this->getRoundTime()."', '".$this->getNbRound()."', NOW(), NOW())
-                            "
+                        (
+                        '".$this->match_id."',
+                        '".$this->currentMap->getMapId()."',
+                        'round_end',
+                        '".$this->getRoundTime()."',
+                        '".$this->getNbRound()."',
+                        NOW(),
+                        NOW())"
             );
 
             $this->score["team_a"] = $this->currentMap->getScore1();
@@ -2072,14 +2265,22 @@ class Match implements Taskable
             );
 
             $this->addLog(
-                $this->teamAName." (".$this->currentMap->getScore1().") - (".$this->currentMap->getScore2().") ".$this->teamBName."."
+                $this->teamAName." (".$this->currentMap->getScore1().") - (".
+                $this->currentMap->getScore2().
+                ") ".$this->teamBName."."
             );
             $this->addMatchLog(
-                "One round was marked - ".$this->teamAName." (".$this->currentMap->getScore1().") - (".$this->currentMap->getScore2().") ".$this->teamBName."."
+                "One round was marked - ".$this->teamAName." (".
+                $this->currentMap->getScore1().
+                ") - (".$this->currentMap->getScore2().") ".$this->teamBName."."
             );
 
             mysqli_query(
-                "UPDATE `matchs` SET score_a = '".$this->score["team_a"]."', score_b ='".$this->score["team_b"]."' WHERE id='".$this->match_id."'"
+                null,
+                "UPDATE `matchs`
+                SET score_a = '".$this->score["team_a"]."',
+                score_b ='".$this->score["team_b"]."'
+                WHERE id='".$this->match_id."'"
             ) or $this->addLog("Can't match ".$this->match_id." scores", Logger::ERROR);
 
             // ROUND SUMMARY
@@ -2126,24 +2327,53 @@ class Match implements Taskable
             }
 
             mysqli_query(
+                null,
                 "INSERT INTO round_summary
-                            (`match_id`,`map_id`,`score_a`,`score_b`,`bomb_planted`,`bomb_defused`,`bomb_exploded`,`ct_win`, `t_win`,`round_id`,`win_type`,`team_win`,`best_killer`,`best_killer_fk`,`best_killer_nb`,`best_action_type`,`best_action_param`, `backup_file_name`,`created_at`,`updated_at`)
-                            VALUES
-                            ('".$this->match_id."', '".$this->currentMap->getMapId()."', '".$this->score["team_a"]."', '".$this->score["team_b"]."',
-                                '".($this->gameBombPlanter != null)."',
-                                    '".($message->type == "bombdefused")."',
-                                        '".($message->type == "bombeexploded")."',
-                                            '".($message->getTeamWin() == "CT")."',
-                                                '".($message->getTeamWin() != "CT")."',
-                                                    '".($this->getNbRound() - 1)."',
-                                                        '".$message->type."','".$teamWin."',
-                                                            $playerId, ".$playerFirstKill.", $nb, ".(($bestActionType != null) ? "'$bestActionType'" : "NULL").", ".(($bestActionParam != null) ? "'".addslashes(
-                                                                serialize($bestActionParam)
-                                                            )."'" : "NULL").",
-                                                                ".$backupFile.",
-                                                                NOW(),
-                                                                    NOW()
-                                                                    )"
+                (
+                `match_id`,
+                `map_id`,
+                `score_a`,
+                `score_b`,
+                `bomb_planted`,
+                `bomb_defused`,
+                `bomb_exploded`,
+                `ct_win`,
+                `t_win`,
+                `round_id`,
+                `win_type`,
+                `team_win`,
+                `best_killer`,
+                `best_killer_fk`,
+                `best_killer_nb`,
+                `best_action_type`,
+                `best_action_param`,
+                `backup_file_name`,
+                `created_at`,
+                `updated_at`
+                )
+                VALUES
+                (
+                '".$this->match_id."',
+                '".$this->currentMap->getMapId()."',
+                '".$this->score["team_a"]."',
+                '".$this->score["team_b"]."',
+                '".($this->gameBombPlanter != null)."',
+                '".($message->type == "bombdefused")."',
+                '".($message->type == "bombeexploded")."',
+                '".($message->getTeamWin() == "CT")."',
+                '".($message->getTeamWin() != "CT")."',
+                '".($this->getNbRound() - 1)."',
+                '".$message->type."',
+                '".$teamWin."',
+                $playerId,
+                ".$playerFirstKill.",
+                $nb,
+                ".(($bestActionType != null) ? "'$bestActionType'" : "NULL").",
+                ".(($bestActionParam != null) ? "'".addslashes(serialize($bestActionParam))."'" : "NULL").",
+                ".$backupFile.",
+                NOW(),
+                NOW()
+                )"
             ) or $this->addLog("Can't insert round summary match ".$this->match_id." - ".mysql_error(), Logger::ERROR);
             // END ROUND SUMMARY
             // Prevent the OverTime bug
@@ -2171,8 +2401,9 @@ class Match implements Taskable
                     $this->rcon->send("mp_halftime_pausetimer 1");
                 }
             } elseif ($this->getStatus() == self::STATUS_SECOND_SIDE) {
-                if (($this->score["team_a"] + $this->score["team_b"] == $this->maxRound * 2) || ($this->score["team_a"] > $this->maxRound && !$this->config_full_score) || ($this->score["team_b"] > $this->maxRound && !$this->config_full_score)) {
-
+                if (($this->score["team_a"] + $this->score["team_b"] == $this->maxRound * 2)
+                    || ($this->score["team_a"] > $this->maxRound && !$this->config_full_score)
+                    || ($this->score["team_b"] > $this->maxRound && !$this->config_full_score)) {
                     if (($this->score["team_a"] == $this->score["team_b"]) && ($this->config_ot)) {
                         $this->setStatus(self::STATUS_WU_OT_1_SIDE, true);
                         $this->currentMap->setStatus(Map::STATUS_WU_OT_1_SIDE, true);
@@ -2194,7 +2425,9 @@ class Match implements Taskable
                     $this->saveScore();
                 }
             } elseif ($this->getStatus() == self::STATUS_OT_FIRST_SIDE) {
-                $scoreToReach = $this->oldMaxround * 2 + $this->ot_maxround + ($this->ot_maxround * 2 * ($this->nbOT - 1));
+                $scoreToReach = $this->oldMaxround * 2
+                    + $this->ot_maxround
+                    + ($this->ot_maxround * 2 * ($this->nbOT - 1));
 
                 if ($this->score["team_a"] + $this->score["team_b"] == $scoreToReach) {
                     $this->setStatus(self::STATUS_WU_OT_2_SIDE, true);
@@ -2208,11 +2441,16 @@ class Match implements Taskable
                     $this->rcon->send("mp_halftime_pausetimer 1");
                 }
             } elseif ($this->getStatus() == self::STATUS_OT_SECOND_SIDE) {
-                $scoreToReach = $this->oldMaxround * 2 + $this->ot_maxround * 2 + ($this->ot_maxround * 2 * ($this->nbOT - 1));
-                $scoreToReach2 = $this->oldMaxround + $this->ot_maxround + ($this->ot_maxround * ($this->nbOT - 1));
+                $scoreToReach = $this->oldMaxround * 2
+                    + $this->ot_maxround * 2
+                    + ($this->ot_maxround * 2 * ($this->nbOT - 1));
+                $scoreToReach2 = $this->oldMaxround
+                    + $this->ot_maxround
+                    + ($this->ot_maxround * ($this->nbOT - 1));
 
-                if (($this->score["team_a"] + $this->score["team_b"] == $scoreToReach) || ($this->score["team_a"] > $scoreToReach2) || ($this->score["team_b"] > $scoreToReach2)) {
-
+                if (($this->score["team_a"] + $this->score["team_b"] == $scoreToReach)
+                    || ($this->score["team_a"] > $scoreToReach2)
+                    || ($this->score["team_b"] > $scoreToReach2)) {
                     if ($this->score["team_a"] == $this->score["team_b"]) {
                         $this->setStatus(self::STATUS_WU_OT_1_SIDE, true);
                         $this->currentMap->setStatus(Map::STATUS_WU_OT_1_SIDE, true);
@@ -2439,7 +2677,9 @@ class Match implements Taskable
                 $this->currentMap->setStatus(Map::STATUS_STARTING, true);
                 $this->setStatus(self::STATUS_STARTING, true);
                 mysqli_query(
-                    "UPDATE `matchs` SET `current_map` = '".$this->currentMap->getMapId()."' WHERE `id` = '".$this->match_id."'"
+                    "UPDATE `matchs`
+                    SET `current_map` = '".$this->currentMap->getMapId()."'
+                    WHERE `id` = '".$this->match_id."'"
                 );
 
                 Logger::debug("Setting need knife round on map");
@@ -2500,7 +2740,7 @@ class Match implements Taskable
                 $enemyTeam = "TERRORIST";
             }
 
-            $this->say_player($userId, "Damage report for ".$player->name." :::");
+            $this->sayPlayer($userId, "Damage report for ".$player->name." :::");
 
             // Process each enemy player to generate report
             foreach ($this->roundData[$this->getNbRound()][$enemyTeam]["HEALTH_LEFT"] as $enemyPlayer => $hpLeft) {
@@ -2509,17 +2749,21 @@ class Match implements Taskable
 
                 // did player do damage to enemy player?
                 if ($this->roundData[$this->getNbRound()][$ownTeam]["DAMAGE_DONE"][$player->name][$enemyPlayer]) {
-                    $dmgDone = $this->roundData[$this->getNbRound()][$ownTeam]["DAMAGE_DONE"][$player->name][$enemyPlayer]["DAMAGE"];
-                    $dmgDoneHits = $this->roundData[$this->getNbRound()][$ownTeam]["DAMAGE_DONE"][$player->name][$enemyPlayer]["HITS"];
+                    $dmgDone = $this->roundData[$this->getNbRound()][$ownTeam]
+                    ["DAMAGE_DONE"][$player->name][$enemyPlayer]["DAMAGE"];
+                    $dmgDoneHits = $this->roundData[$this->getNbRound()][$ownTeam]
+                    ["DAMAGE_DONE"][$player->name][$enemyPlayer]["HITS"];
                 }
 
                 // did player take damage from enemy player?
                 if ($this->roundData[$this->getNbRound()][$ownTeam]["DAMAGE_TAKEN"][$player->name][$enemyPlayer]) {
-                    $dmgTaken = $this->roundData[$this->getNbRound()][$ownTeam]["DAMAGE_TAKEN"][$player->name][$enemyPlayer]["DAMAGE"];
-                    $dmgTakenHits = $this->roundData[$this->getNbRound()][$ownTeam]["DAMAGE_TAKEN"][$player->name][$enemyPlayer]["HITS"];
+                    $dmgTaken = $this->roundData[$this->getNbRound()][$ownTeam]
+                    ["DAMAGE_TAKEN"][$player->name][$enemyPlayer]["DAMAGE"];
+                    $dmgTakenHits = $this->roundData[$this->getNbRound()][$ownTeam]
+                    ["DAMAGE_TAKEN"][$player->name][$enemyPlayer]["HITS"];
                 }
 
-                $this->say_player(
+                $this->sayPlayer(
                     $userId,
                     "(".$this->formatText($dmgDone, "green")." / ".$this->formatText(
                         $dmgDoneHits,
@@ -2544,24 +2788,36 @@ class Match implements Taskable
                 )
         )
         ) {
-            // check if damage exceeds hp of victim, if so change HP to 0 and atackerDamage to victimHP so that AWP hits f.eks dont show 447 damage on HS
-            if (isset($this->roundData[$this->getNbRound()][$message->victimTeam]["HEALTH_LEFT"][$message->victimName]) && ($this->roundData[$this->getNbRound()][$message->victimTeam]["HEALTH_LEFT"][$message->victimName] - $message->attackerDamage) < 0
+            $nbRound = $this->roundData[$this->getNbRound()];
+            $victimTeamMsg = $nbRound[$message->victimTeam];
+            $attackerTeamMsg = $nbRound[$message->attackerTeam];
+            // check if damage exceeds hp of victim, if so change HP to 0
+            // and atackerDamage to victimHP so that AWP hits f.eks dont show 447 damage on HS
+            if (isset($nbRound[$message->victimTeam]["HEALTH_LEFT"][$message->victimName])
+                && ($nbRound[$message->victimTeam]["HEALTH_LEFT"][$message->victimName] - $message->attackerDamage) < 0
             ) {
-                $message->attackerDamage = $this->roundData[$this->getNbRound()][$message->victimTeam]["HEALTH_LEFT"][$message->victimName];
-                $this->roundData[$this->getNbRound()][$message->victimTeam]["HEALTH_LEFT"][$message->victimName] = 0;
+                $message->attackerDamage = $victimTeamMsg["HEALTH_LEFT"][$message->victimName];
+                $victimTeamMsg["HEALTH_LEFT"][$message->victimName] = 0;
             } else {
-                $this->roundData[$this->getNbRound()][$message->victimTeam]["HEALTH_LEFT"][$message->victimName] -= $message->attackerDamage;
+                $victimTeamMsg["HEALTH_LEFT"][$message->victimName] -= $message->attackerDamage;
             }
 
-            // check if attacker is on own team if so then don't append data, we dont want damage report for own team members
+            // check if attacker is on own team if so then don't append data,
+            // we dont want damage report for own team members
             if ($message->attackerTeam != $message->victimTeam) {
-                $this->roundData[$this->getNbRound()][$message->attackerTeam]["DAMAGE_DONE"][$message->attackerName][$message->victimName]["DAMAGE"] += $message->attackerDamage;
-                $this->roundData[$this->getNbRound()][$message->attackerTeam]["DAMAGE_DONE"][$message->attackerName][$message->victimName]["HITS"] += 1;
-                $this->roundData[$this->getNbRound()][$message->victimTeam]["DAMAGE_TAKEN"][$message->victimName][$message->attackerName]["DAMAGE"] += $message->attackerDamage;
-                $this->roundData[$this->getNbRound()][$message->victimTeam]["DAMAGE_TAKEN"][$message->victimName][$message->attackerName]["HITS"] += 1;
+                $attackerTeamMsg["DAMAGE_DONE"][$message->attackerName][$message->victimName]["DAMAGE"] +=
+                    $message->attackerDamage;
+                $attackerTeamMsg["DAMAGE_DONE"][$message->attackerName][$message->victimName]["HITS"] += 1;
+                $victimTeamMsg["DAMAGE_TAKEN"][$message->victimName][$message->attackerName]["DAMAGE"] +=
+                    $message->attackerDamage;
+                $victimTeamMsg["DAMAGE_TAKEN"][$message->victimName][$message->attackerName]["HITS"] += 1;
             }
 
-            //            $this->say($message->attackerName . " (" . $message->attackerTeam . ") hit " . $message->victimName . " (" . $message->victimTeam . ") for " . $message->attackerDamage . " in round " . $this->getNbRound() . " (hp left: " . $this->roundData[$this->getNbRound()]["HEALTH_LEFT"][$message->victimName] . ") with " . $message->attackerWeapon . " hit in " . $message->attackerHitGroup);
+            // $this->say($message->attackerName . " (" . $message->attackerTeam . ") hit " .
+            // $message->victimName . " (" . $message->victimTeam . ") for " .
+            // $message->attackerDamage . " in round " . $this->getNbRound() .
+            // " (hp left: " . $this->roundData[$this->getNbRound()]["HEALTH_LEFT"][$message->victimName] .
+            // ") with " . $message->attackerWeapon . " hit in " . $message->attackerHitGroup);
         }
     }
 
@@ -2573,7 +2829,8 @@ class Match implements Taskable
             $message->getUserTeam(),
             $message->getUserSteamid()
         );
-        //$killed = $this->processPlayer($message->getKilledUserId(), $message->getKilledUserName(), $message->getKilledUserTeam(), $message->getKilledUserSteamid());
+        //$killed = $this->processPlayer($message->getKilledUserId(),
+        //$message->getKilledUserName(), $message->getKilledUserTeam(), $message->getKilledUserSteamid());
 
         if (!$this->waitForRestart && $this->enable && in_array(
             $this->getStatus(),
@@ -2589,8 +2846,10 @@ class Match implements Taskable
             $killer->save();
         }
 
-        //        $this->addLog($message->userName . " assisted the kill of " . $message->killedUserName);
-        //        $this->addMatchLog($this->getColoredUserNameHTML($message->userName, $message->userTeam) . " assisted the kill of " . $this->getColoredUserNameHTML($message->killedUserName, $message->killedUserTeam));
+        // $this->addLog($message->userName . " assisted the kill of " . $message->killedUserName);
+        // $this->addMatchLog($this->getColoredUserNameHTML($message->userName, $message->userTeam) .
+        // " assisted the kill of " .
+        // $this->getColoredUserNameHTML($message->killedUserName, $message->killedUserTeam));
     }
 
     private function processKill(Kill $message)
@@ -2618,7 +2877,8 @@ class Match implements Taskable
                 )
         )
         ) {
-            // set HP of killed to 0 incase killed player took fall/world damage during game, this is not loogged so we can't process it manually unfortunately.
+            // set HP of killed to 0 incase killed player took fall/world damage during game,
+            // this is not loogged so we can't process it manually unfortunately.
             $this->roundData[$this->getNbRound()][$message->killedUserTeam]["HP_LEFT"][$message->killedUserName] = 0;
             $killer = $this->findPlayer($message->userId, $message->userSteamid);
             $killed = $this->findPlayer($message->killedUserId, $message->killedUserSteamid);
@@ -2674,14 +2934,36 @@ class Match implements Taskable
             //getNbRound
             mysqli_query(
                 "INSERT INTO player_kill
-                (`match_id`,`map_id`, `killer_team`,`killer_name`,`killer_id`,`killed_team`,`killed_name`,`killed_id`,`weapon`,`headshot`,`round_id`,`created_at`,`updated_at`)
+                (
+                `match_id`,
+                `map_id`,
+                `killer_team`,
+                `killer_name`,
+                `killer_id`,
+                `killed_team`,
+                `killed_name`,
+                `killed_id`,
+                `weapon`,
+                `headshot`,
+                `round_id`,
+                `created_at`,
+                `updated_at`
+                s)
                 VALUES
-                ('".$this->match_id."','".$this->currentMap->getMapId()."', '".$message->userTeam."', '".addslashes(
-                    $killer_name
-                )."', ".(($killer_id != null) ? $killer_id : "NULL").", '".$message->killedUserTeam."' ,'".addslashes(
-                    $killed_name
-                )."', ".(($killed_id != null) ? $killed_id : "NULL").", '".$message->weapon."', '".$message->headshot."','".(($this->roundEndEvent) ? $this->getNbRound() - 1 : $this->getNbRound())."', NOW(), NOW())
-                    "
+                (
+                '".$this->match_id."',
+                '".$this->currentMap->getMapId()."',
+                '".$message->userTeam."',
+                '".addslashes($killer_name)."',
+                ".(($killer_id != null) ? $killer_id : "NULL").",
+                '".$message->killedUserTeam."'
+                ,'".addslashes($killed_name)."',
+                ".(($killed_id != null) ? $killed_id : "NULL").",
+                '".$message->weapon."',
+                '".$message->headshot."',
+                '".(($this->roundEndEvent) ? $this->getNbRound() - 1 : $this->getNbRound())."',
+                NOW(),
+                NOW())"
             ) or $this->addLog("Can't insert player_kill ".mysql_error(), Logger::ERROR);
 
             // Round Event
@@ -2693,19 +2975,61 @@ class Match implements Taskable
                     INSERT INTO `round`
                     (`match_id`,`map_id`,`event_name`,`event_time`,`kill_id`,`round_id`,`created_at`,`updated_at`)
                         VALUES
-                    ('".$this->match_id."', '".$this->currentMap->getMapId()."', 'kill', '".$this->getRoundTime()."', $id, '".(($this->roundEndEvent) ? $this->getNbRound() - 1 : $this->getNbRound())."', NOW(), NOW())
-                        "
+                    ('".$this->match_id."',
+                    '".$this->currentMap->getMapId()."',
+                    'kill',
+                    '".$this->getRoundTime()."',
+                    $id,
+                    '".(($this->roundEndEvent) ? $this->getNbRound() - 1 : $this->getNbRound())."',
+                    NOW(),
+                    NOW())"
                 );
             }
 
             // HeatMap !
             mysqli_query(
                 "INSERT INTO `players_heatmap`
-                            (`match_id`,`map_id`,`event_name`,`event_x`,`event_y`,`event_z`,`player_name`,`player_id`,`player_team`,`attacker_x`,`attacker_y`,`attacker_z`,`attacker_name`,`attacker_id`,`attacker_team`,`round_id`,`round_time`,`created_at`,`updated_at`) VALUES
-                            (".$this->match_id.", ".$this->currentMap->getMapId().", 'kill', '".$message->killedPosX."', '".$message->killedPosY."', '".$message->killedPosZ."','".addslashes(
-                    $message->killedUserName
-                )."', '".$killed_id."', '".$message->killedUserTeam."', '".$message->killerPosX."', '".$message->killerPosY."', '".$message->killerPosZ."', '".$message->userName."', '".$killer_id."', '".$message->userTeam."', '".(($this->roundEndEvent) ? $this->getNbRound() - 1 : $this->getNbRound())."', '".$this->getRoundTime()."', NOW(), NOW())
-                            "
+                (
+                `match_id`,
+                `map_id`,
+                `event_name`,
+                `event_x`,
+                `event_y`,
+                `event_z`,
+                `player_name`,
+                `player_id`,
+                `player_team`,
+                `attacker_x`,
+                `attacker_y`,
+                `attacker_z`,
+                `attacker_name`,
+                `attacker_id`,
+                `attacker_team`,
+                `round_id`,
+                `round_time`,
+                `created_at`,
+                `updated_at`
+                ) VALUES
+                (
+                ".$this->match_id.",
+                ".$this->currentMap->getMapId().",
+                'kill',
+                '".$message->killedPosX."',
+                '".$message->killedPosY."',
+                '".$message->killedPosZ."',
+                '".addslashes($message->killedUserName)."',
+                '".$killed_id."',
+                '".$message->killedUserTeam."',
+                '".$message->killerPosX."',
+                '".$message->killerPosY."',
+                '".$message->killerPosZ."',
+                '".$message->userName."',
+                '".$killer_id."',
+                '".$message->userTeam."',
+                '".(($this->roundEndEvent) ? $this->getNbRound() - 1 : $this->getNbRound())."',
+                '".$this->getRoundTime()."',
+                NOW(),
+                NOW()) "
             );
 
             if ($killer) {
@@ -2724,7 +3048,9 @@ class Match implements Taskable
         }
 
         $this->addLog(
-            $message->getUserName()." killed ".$message->getKilledUserName()." with ".$message->weapon.(($message->headshot) ? " (headshot)" : "")." (CT: ".$this->nbLast["nb_ct"]." - T: ".$this->nbLast['nb_t'].")."
+            $message->getUserName()." killed ".$message->getKilledUserName()." with ".
+            $message->weapon.(($message->headshot) ? " (headshot)" : "").
+            " (CT: ".$this->nbLast["nb_ct"]." - T: ".$this->nbLast['nb_t'].")."
         );
         $this->addMatchLog(
             $this->getColoredUserNameHTML(
@@ -2733,7 +3059,8 @@ class Match implements Taskable
             )." killed ".$this->getColoredUserNameHTML(
                 $message->getKilledUserName(),
                 $message->killedUserTeam
-            )." with ".$message->weapon.(($message->headshot) ? " (headshot)" : "")." (CT: ".$this->nbLast["nb_ct"]." - T: ".$this->nbLast['nb_t'].")."
+            )." with ".$message->weapon.(($message->headshot) ? " (headshot)" : "").
+            " (CT: ".$this->nbLast["nb_ct"]." - T: ".$this->nbLast['nb_t'].")."
         );
 
         $this->watchForSpecialSituation();
@@ -2864,11 +3191,16 @@ class Match implements Taskable
 
     private function processRoundRestart(\eBot\Message\Type\RoundRestart $message)
     {
-        if ($this->waitForRestart && $this->getStatus() == self::STATUS_FIRST_SIDE && (Config::getInstance()->getConfigKnifeMethod() == "matchstart" || $this->forceRoundStartRecord)
+        if ($this->waitForRestart
+            && $this->getStatus() == self::STATUS_FIRST_SIDE
+            && (Config::getInstance()->getConfigKnifeMethod() == "matchstart"
+                || $this->forceRoundStartRecord)
         ) {
             $this->waitRoundStartRecord = true;
             $this->forceRoundStartRecord = false;
-        } elseif ($this->waitForRestart && $this->getStatus() == self::STATUS_KNIFE && Config::getInstance()->getConfigKnifeMethod() == "knifestart"
+        } elseif ($this->waitForRestart
+            && $this->getStatus() == self::STATUS_KNIFE
+            && Config::getInstance()->getConfigKnifeMethod() == "knifestart"
         ) {
             $this->waitRoundStartRecord = true;
         }
@@ -2946,13 +3278,22 @@ class Match implements Taskable
 
         // Preventing old data
         mysqli_query(
-            "DELETE FROM player_kill WHERE round_id = ".$this->getNbRound()." AND map_id='".$this->currentMap->getMapId()."'"
+            null,
+            "DELETE FROM player_kill
+            WHERE round_id = ".$this->getNbRound()."
+            AND map_id='".$this->currentMap->getMapId()."'"
         );
         mysqli_query(
-            "DELETE FROM round WHERE round_id = ".$this->getNbRound()." AND map_id='".$this->currentMap->getMapId()."'"
+            null,
+            "DELETE FROM round
+            WHERE round_id = ".$this->getNbRound()."
+            AND map_id='".$this->currentMap->getMapId()."'"
         );
         mysqli_query(
-            "DELETE FROM round_summary WHERE round_id = ".$this->getNbRound()." AND map_id='".$this->currentMap->getMapId()."'"
+            null,
+            "DELETE FROM round_summary
+            WHERE round_id = ".$this->getNbRound()."
+            AND map_id='".$this->currentMap->getMapId()."'"
         );
 
         mysqli_query(
@@ -2960,8 +3301,14 @@ class Match implements Taskable
                     INSERT INTO `round`
                     (`match_id`,`map_id`,`event_name`,`event_time`,`round_id`,`created_at`,`updated_at`)
                         VALUES
-                    ('".$this->match_id."', '".$this->currentMap->getMapId()."', 'round_start', '".$this->getRoundTime()."', '".$this->getNbRound()."', NOW(), NOW())
-                        "
+                    (
+                    '".$this->match_id."',
+                    '".$this->currentMap->getMapId()."',
+                    'round_start',
+                    '".$this->getRoundTime()."',
+                    '".$this->getNbRound()."',
+                    NOW(),
+                    NOW())"
         );
         if ($this->isMatchRound()) {
             $this->websocket['livemap']->sendData(
@@ -3045,8 +3392,14 @@ class Match implements Taskable
                             INSERT INTO `round`
                             (`match_id`,`map_id`,`event_name`,`event_time`,`round_id`,`created_at`,`updated_at`)
                                 VALUES
-                            ('".$this->match_id."', '".$this->currentMap->getMapId()."', '1vx', '".$this->getRoundTime()."', '".$this->getNbRound()."', NOW(), NOW())
-                                "
+                            (
+                            '".$this->match_id."',
+                            '".$this->currentMap->getMapId()."',
+                            '1vx',
+                            '".$this->getRoundTime()."',
+                            '".$this->getNbRound()."',
+                            NOW(),
+                            NOW())"
                 );
             } else {
                 if ($this->nbLast['nb_ct'] == 1) {
@@ -3080,7 +3433,15 @@ class Match implements Taskable
                         mysqli_query(
                             "
                             INSERT INTO `round`
-                            (`match_id`,`map_id`,`event_name`, `event_text`,`event_time`,`round_id`,`created_at`,`updated_at`)
+                            (
+                            `match_id`,
+                            `map_id`,
+                            `event_name`,
+                            `event_text`,
+                            `event_time`,
+                            `round_id`,
+                            `created_at`,
+                            `updated_at`)
                                 VALUES
                             ('".$this->match_id."', '".$this->currentMap->getMapId()."', '1vx', '".addslashes(
                                 serialize(
@@ -3124,7 +3485,14 @@ class Match implements Taskable
                         mysqli_query(
                             "
                             INSERT INTO `round`
-                            (`match_id`,`map_id`,`event_name`, `event_text`,`event_time`,`round_id`,`created_at`,`updated_at`)
+                            (`match_id`,
+                            `map_id`,
+                            `event_name`,
+                            `event_text`,
+                            `event_time`,
+                            `round_id`,
+                            `created_at`,
+                            `updated_at`)
                                 VALUES
                             ('".$this->match_id."', '".$this->currentMap->getMapId()."', '1vx', '".addslashes(
                                 serialize(
@@ -3162,8 +3530,12 @@ class Match implements Taskable
                             INSERT INTO `round`
                             (`match_id`,`map_id`,`event_name`,`event_time`,`round_id`,`created_at`,`updated_at`)
                                 VALUES
-                            ('".$this->match_id."', '".$this->currentMap->getMapId()."', '1v1', '".$this->getRoundTime()."', '".$this->getNbRound()."', NOW(), NOW())
-                                "
+                            ('".$this->match_id."',
+                            '".$this->currentMap->getMapId()."',
+                            '1v1', '".$this->getRoundTime()."',
+                            '".$this->getNbRound()."',
+                            NOW(),
+                            NOW())"
                         );
                     }
                 }
@@ -3191,7 +3563,6 @@ class Match implements Taskable
     private function saveScore()
     {
         foreach ($this->players as $player) {
-
         }
     }
 
@@ -3295,7 +3666,7 @@ class Match implements Taskable
 
     private function setMatchMap($mapname)
     {
-        if ($this->playMap["ct"] == $this->playMap["t"] AND $this->playMap["ct"] != "") {
+        if ($this->playMap["ct"] == $this->playMap["t"] and $this->playMap["ct"] != "") {
             mysqli_query(
                 "UPDATE `maps` SET `map_name` = '".$this->playMap["ct"]."' WHERE `match_id` = '".$this->match_id."'"
             );
@@ -3315,7 +3686,8 @@ class Match implements Taskable
                 throw new MatchException();
             }
             $this->addLog(
-                "Maps selected: #".$this->currentMap->getMapId()." - ".$this->currentMap->getMapName()." - ".$this->currentMap->getStatusText()
+                "Maps selected: #".$this->currentMap->getMapId()." - ".
+                $this->currentMap->getMapName()." - ".$this->currentMap->getStatusText()
             );
             Logger::debug("Engage new Map.");
             TaskManager::getInstance()->addTask(new Task($this, self::TASK_ENGAGE_MAP, microtime(true) + 1));
@@ -3345,7 +3717,9 @@ class Match implements Taskable
             $this->score["team_b"] = $this->currentMap->getScore2();
 
             mysqli_query(
-                "UPDATE `matchs` SET score_a = '".$this->score["team_a"]."', score_b ='".$this->score["team_b"]."' WHERE id='".$this->match_id."'"
+                "UPDATE `matchs`
+                SET score_a = '".$this->score["team_a"]."', score_b ='".$this->score["team_b"]."'
+                WHERE id='".$this->match_id."'"
             );
 
             // Setting nb OverTime
@@ -3414,7 +3788,9 @@ class Match implements Taskable
                     mysqli_query(
                         "DELETE FROM player_kill WHERE round_id >= 1 AND map_id='".$this->currentMap->getMapId()."'"
                     );
-                    mysqli_query("DELETE FROM round WHERE round_id >= 1 AND map_id='".$this->currentMap->getMapId()."'");
+                    mysqli_query(
+                        "DELETE FROM round WHERE round_id >= 1 AND map_id='".$this->currentMap->getMapId()."'"
+                    );
                     mysqli_query(
                         "DELETE FROM round_summary WHERE round_id >= 1 AND map_id='".$this->currentMap->getMapId()."'"
                     );
@@ -3442,27 +3818,23 @@ class Match implements Taskable
                         "UPDATE `matchs` SET ingame_enable = 0 WHERE id='".$this->match_id."'"
                     ) or $this->addLog("Can't update ingame_enable", Logger::ERROR);
 
-                    /* if ($this->getNbRound() == $this->maxRound + 1) {
-                      $this->rcon->send("mp_swapteams");
-                      $this->say("Don't panic, to prevent a bug from backup system, you are switched. You will be switched when you continue the match");
-                      }
-
-                      if ($this->getStatus() > self::STATUS_WU_OT_1_SIDE) {
-                      $round = $this->getNbRound() - ($this->oldMaxround * 2);
-                      if ($round % ($this->maxRound * 2) == $this->maxRound + 1) {
-                      $this->rcon->send("mp_swapteams");
-                      $this->say("Don't panic, to prevent a bug from backup system, you are switched. You will be switched when you continue the match");
-                      }
-                      } */
-
                     mysqli_query(
-                        "DELETE FROM player_kill WHERE round_id = ".$this->getNbRound()." AND map_id='".$this->currentMap->getMapId()."'"
+                        null,
+                        "DELETE FROM player_kill 
+                        WHERE round_id = ".$this->getNbRound()."
+                        AND map_id='".$this->currentMap->getMapId()."'"
                     );
                     mysqli_query(
-                        "DELETE FROM round WHERE round_id = ".$this->getNbRound()." AND map_id='".$this->currentMap->getMapId()."'"
+                        null,
+                        "DELETE FROM round
+                        WHERE round_id = ".$this->getNbRound()."
+                        AND map_id='".$this->currentMap->getMapId()."'"
                     );
                     mysqli_query(
-                        "DELETE FROM round_summary WHERE round_id = ".$this->getNbRound()." AND map_id='".$this->currentMap->getMapId()."'"
+                        null,
+                        "DELETE FROM round_summary 
+                        WHERE round_id = ".$this->getNbRound()." 
+                        AND map_id='".$this->currentMap->getMapId()."'"
                     );
                 }
 
@@ -3505,7 +3877,15 @@ class Match implements Taskable
     {
         $this->say("Executing knife config.");
         $this->rcon->send(
-            "mp_halftime_duration 1; mp_roundtime 60; mp_roundtime_defuse 60; mp_roundtime_hostage 60; mp_ct_default_secondary ''; mp_t_default_secondary ''; mp_free_armor 1; mp_give_player_c4 0; mp_maxmoney 0"
+            "mp_halftime_duration 1; ".
+            "mp_roundtime 60; ".
+            "mp_roundtime_defuse 60; ".
+            "mp_roundtime_hostage 60; ".
+            "mp_ct_default_secondary ''; ".
+            "mp_t_default_secondary ''; ".
+            "mp_free_armor 1; ".
+            "mp_give_player_c4 0; ".
+            "mp_maxmoney 0"
         );
 
         return $this;
@@ -3514,7 +3894,15 @@ class Match implements Taskable
     private function undoKnifeConfig()
     {
         $this->rcon->send(
-            "mp_halftime_duration 15; mp_roundtime 5; mp_roundtime_defuse 0; mp_roundtime_hostage 0; mp_ct_default_secondary \"weapon_hkp2000\"; mp_t_default_secondary \"weapon_glock\"; mp_free_armor 0; mp_give_player_c4 1; mp_maxmoney 16000"
+            "mp_halftime_duration 15; ".
+            "mp_roundtime 5; ".
+            "mp_roundtime_defuse 0; ".
+            "mp_roundtime_hostage 0; ".
+            "mp_ct_default_secondary \"weapon_hkp2000\"; ".
+            "mp_t_default_secondary \"weapon_glock\"; ".
+            "mp_free_armor 0; ".
+            "mp_give_player_c4 1; ".
+            "mp_maxmoney 16000"
         );
 
         return $this;
@@ -3523,7 +3911,12 @@ class Match implements Taskable
     private function executeWarmupConfig()
     {
         $this->rcon->send(
-            "mp_warmuptime 3600; mp_warmup_pausetimer 1; mp_maxmoney 60000; mp_startmoney 60000; mp_free_armor 1; mp_warmup_start"
+            "mp_warmuptime 3600; ".
+            "mp_warmup_pausetimer 1; ".
+            "mp_maxmoney 60000; ".
+            "mp_startmoney 60000; ".
+            "mp_free_armor 1; ".
+            "mp_warmup_start"
         );
 
         return $this;
@@ -3532,7 +3925,12 @@ class Match implements Taskable
     private function undoWarmupConfig()
     {
         $this->rcon->send(
-            "mp_warmuptime 30; mp_warmup_pausetimer 0; mp_maxmoney 16000; mp_startmoney 800; mp_free_armor 0; mp_warmup_end"
+            "mp_warmuptime 30; ".
+            "mp_warmup_pausetimer 0; ".
+            "mp_maxmoney 16000; ".
+            "mp_startmoney 800; ".
+            "mp_free_armor 0; ".
+            "mp_warmup_end"
         );
 
         return $this;
@@ -3541,7 +3939,8 @@ class Match implements Taskable
     private function executeMatchConfig()
     {
         $this->rcon->send(
-            "exec ".$this->matchData["rules"].".cfg; mp_warmuptime 0; mp_halftime_pausetimer 1; mp_maxrounds ".($this->maxRound * 2)
+            "exec ".$this->matchData["rules"].".cfg; ".
+            "mp_warmuptime 0; mp_halftime_pausetimer 1; mp_maxrounds ".($this->maxRound * 2)
         );
 
         return $this;
@@ -3613,53 +4012,55 @@ class Match implements Taskable
                     $this->addLog("Launching RS.");
 
                     switch ($this->currentMap->getStatus()) {
-                    case Map::STATUS_WU_1_SIDE:
-                        $this->currentMap->setStatus(Map::STATUS_FIRST_SIDE, true);
-                        $this->setStatus(self::STATUS_FIRST_SIDE, true);
+                        case Map::STATUS_WU_1_SIDE:
+                            $this->currentMap->setStatus(Map::STATUS_FIRST_SIDE, true);
+                            $this->setStatus(self::STATUS_FIRST_SIDE, true);
 
-                        // Start demo record if RECORD_METHOD is "matchstart" in config.ini
-                        if (Config::getInstance()->getConfigKnifeMethod() == "matchstart") {
-                            $this->waitRoundStartRecord = true;
-                        }
+                            // Start demo record if RECORD_METHOD is "matchstart" in config.ini
+                            if (Config::getInstance()->getConfigKnifeMethod() == "matchstart") {
+                                $this->waitRoundStartRecord = true;
+                            }
 
-                        // Start demo record if RECORD_METHOD is "knifestart" in config.ini and no knife round was done
-                        if (Config::getInstance()->getConfigKnifeMethod() == "knifestart" && $this->winKnife == ""
-                        ) {
-                            $this->waitRoundStartRecord = true;
-                        }
+                            // Start demo record if RECORD_METHOD is "knifestart" in config.ini
+                            // and no knife round was done
+                            if (Config::getInstance()->getConfigKnifeMethod() == "knifestart" && $this->winKnife == ""
+                            ) {
+                                $this->waitRoundStartRecord = true;
+                            }
 
-                        // Undo changes from warmup (turn back to default values) and go live with first side of regulation
-                        $this->undoWarmupConfig()->executeMatchConfig()->goLive("LIVE");
-                        break;
-                    case Map::STATUS_WU_2_SIDE :
-                        $this->currentMap->setStatus(Map::STATUS_SECOND_SIDE, true);
-                        $this->setStatus(self::STATUS_SECOND_SIDE, true);
+                            // Undo changes from warmup (turn back to default values)
+                            // and go live with first side of regulation
+                            $this->undoWarmupConfig()->executeMatchConfig()->goLive("LIVE");
+                            break;
+                        case Map::STATUS_WU_2_SIDE:
+                            $this->currentMap->setStatus(Map::STATUS_SECOND_SIDE, true);
+                            $this->setStatus(self::STATUS_SECOND_SIDE, true);
 
-                        // NEW
-                        $this->waitForRestart = false;
-                        $this->rcon->send("mp_halftime_pausetimer 0; ");
-                        if ($this->config_full_score) {
-                            $this->rcon->send("mp_match_can_clinch 0");
-                        }
-                        $this->say("2nd Side: LIVE!");
-                        break;
-                    case Map::STATUS_WU_OT_1_SIDE :
-                        $this->currentMap->setStatus(Map::STATUS_OT_FIRST_SIDE, true);
-                        $this->setStatus(self::STATUS_OT_FIRST_SIDE, true);
-                        // NEW
-                        $this->rcon->send("mp_halftime_pausetimer 0");
-                        $this->say("1st Side OT: LIVE!");
-                        $this->waitForRestart = false;
-                        break;
-                    case Map::STATUS_WU_OT_2_SIDE :
-                        $this->currentMap->setStatus(Map::STATUS_OT_SECOND_SIDE, true);
-                        $this->setStatus(self::STATUS_OT_SECOND_SIDE, true);
+                            // NEW
+                            $this->waitForRestart = false;
+                            $this->rcon->send("mp_halftime_pausetimer 0; ");
+                            if ($this->config_full_score) {
+                                $this->rcon->send("mp_match_can_clinch 0");
+                            }
+                            $this->say("2nd Side: LIVE!");
+                            break;
+                        case Map::STATUS_WU_OT_1_SIDE:
+                            $this->currentMap->setStatus(Map::STATUS_OT_FIRST_SIDE, true);
+                            $this->setStatus(self::STATUS_OT_FIRST_SIDE, true);
+                            // NEW
+                            $this->rcon->send("mp_halftime_pausetimer 0");
+                            $this->say("1st Side OT: LIVE!");
+                            $this->waitForRestart = false;
+                            break;
+                        case Map::STATUS_WU_OT_2_SIDE:
+                            $this->currentMap->setStatus(Map::STATUS_OT_SECOND_SIDE, true);
+                            $this->setStatus(self::STATUS_OT_SECOND_SIDE, true);
 
-                        // NEW
-                        $this->waitForRestart = false;
-                        $this->rcon->send("mp_halftime_pausetimer 0");
-                        $this->say("2nd Side OT: LIVE!");
-                        break;
+                            // NEW
+                            $this->waitForRestart = false;
+                            $this->rcon->send("mp_halftime_pausetimer 0");
+                            $this->say("2nd Side OT: LIVE!");
+                            break;
                     }
 
                     if ($this->getStatus() == self::STATUS_FIRST_SIDE) {
@@ -3682,15 +4083,15 @@ class Match implements Taskable
         $text = $this->server_ip." :: ".$text;
 
         switch ($type) {
-        case Logger::DEBUG:
-            Logger::debug($text);
-            break;
-        case Logger::LOG:
-            Logger::log($text);
-            break;
-        case Logger::ERROR:
-            Logger::error($text);
-            break;
+            case Logger::DEBUG:
+                Logger::debug($text);
+                break;
+            case Logger::LOG:
+                Logger::log($text);
+                break;
+            case Logger::ERROR:
+                Logger::error($text);
+                break;
         }
     }
 
@@ -3850,7 +4251,10 @@ class Match implements Taskable
             $this->currentMap->setStatus(Map::STATUS_STARTING, true);
             $this->setStatus(self::STATUS_STARTING, true);
             mysqli_query(
-                "UPDATE `matchs` SET `current_map` = '".$this->currentMap->getMapId()."' WHERE `id` = '".$this->match_id."'"
+                null,
+                "UPDATE `matchs`
+                SET `current_map` = '".$this->currentMap->getMapId()."'
+                WHERE `id` = '".$this->match_id."'"
             );
 
             Logger::debug("Setting need knife round on map.");
@@ -4016,7 +4420,11 @@ class Match implements Taskable
     {
         $this->enable = false;
         $sql = mysqli_query(
-            "SELECT * FROM  round_summary WHERE match_id = '".$this->match_id."' AND map_id = '".$this->currentMap->getMapId()."' AND round_id = $round"
+            null,
+            "SELECT * FROM round_summary
+            WHERE match_id = '".$this->match_id."'
+            AND map_id = '".$this->currentMap->getMapId()."'
+            AND round_id = $round"
         );
         $req = mysqli_fetch_array($sql);
 
@@ -4047,7 +4455,10 @@ class Match implements Taskable
         $this->score["team_b"] = $req['score_b'];
 
         mysqli_query(
-            "UPDATE `matchs` SET score_a = '".$this->score["team_a"]."', score_b ='".$this->score["team_b"]."' WHERE id='".$this->match_id."'"
+            null,
+            "UPDATE `matchs`
+            SET score_a = '".$this->score["team_a"]."', score_b ='".$this->score["team_b"]."'
+            WHERE id='".$this->match_id."'"
         );
 
         // To check with overtime
@@ -4113,29 +4524,29 @@ class Match implements Taskable
         if ($status && $this->getStatus() != $status) {
             $this->addLog("Setting match to another status: ".$status.".");
             switch ($this->getStatus()) {
-            case self::STATUS_SECOND_SIDE:
-                if ($status == self::STATUS_FIRST_SIDE) {
-                    $this->addLog("Swapping teams!");
-                    $this->swapSides();
-                }
-                break;
-            case self::STATUS_OT_FIRST_SIDE:
-                if ($status == self::STATUS_FIRST_SIDE) {
-                    $this->addLog("Swapping teams!");
-                    $this->swapSides();
-                }
-                break;
-            case self::STATUS_OT_SECOND_SIDE:
-                if ($status == self::STATUS_OT_FIRST_SIDE) {
-                    $this->addLog("Swapping teams!");
-                    $this->swapSides();
-                }
+                case self::STATUS_SECOND_SIDE:
+                    if ($status == self::STATUS_FIRST_SIDE) {
+                        $this->addLog("Swapping teams!");
+                        $this->swapSides();
+                    }
+                    break;
+                case self::STATUS_OT_FIRST_SIDE:
+                    if ($status == self::STATUS_FIRST_SIDE) {
+                        $this->addLog("Swapping teams!");
+                        $this->swapSides();
+                    }
+                    break;
+                case self::STATUS_OT_SECOND_SIDE:
+                    if ($status == self::STATUS_OT_FIRST_SIDE) {
+                        $this->addLog("Swapping teams!");
+                        $this->swapSides();
+                    }
 
-                if ($status == self::STATUS_SECOND_SIDE) {
-                    $this->addLog("Swapping teams!");
-                    $this->swapSides();
-                }
-                break;
+                    if ($status == self::STATUS_SECOND_SIDE) {
+                        $this->addLog("Swapping teams!");
+                        $this->swapSides();
+                    }
+                    break;
             }
             $this->setStatus($status, true);
             $this->currentMap->setStatus($statusMap, true);

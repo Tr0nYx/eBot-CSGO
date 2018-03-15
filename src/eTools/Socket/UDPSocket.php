@@ -51,5 +51,3 @@ class UDPSocket
         return socket_sendto($this->socket, $mess, strlen($mess), 0, $ip, $port);
     }
 }
-
-?>

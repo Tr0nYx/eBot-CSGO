@@ -20,5 +20,4 @@ class RoundEnd extends Type
     {
         $this->setName("RoundEnd");
     }
-
 }

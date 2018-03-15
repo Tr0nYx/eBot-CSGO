@@ -19,7 +19,8 @@ class Connected extends Message
     public function __construct()
     {
         parent::__construct(
-            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>][<](?P<steam_id>.*)[>][<][>]" connected, address "(?P<address>.*)"/'
+            '/^"(?P<user_name>.+)[<](?P<user_id>\d+)[>]'.
+            '[<](?P<steam_id>.*)[>][<][>]" connected, address "(?P<address>.*)"/'
         );
     }
 

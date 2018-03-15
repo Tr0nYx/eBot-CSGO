@@ -57,9 +57,7 @@ abstract class Rcon
         return $this->status;
     }
 
-    public abstract function auth();
+    abstract public function auth();
 
-    public abstract function send($cmd);
+    abstract public function send($cmd);
 }
-
-?>
